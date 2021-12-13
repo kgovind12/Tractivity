@@ -102,7 +102,7 @@ async function createTableRows() {
         let dateCol = document.createElement('td');
         dateCol.textContent = entry.date;
         let activityCol = document.createElement('td');
-        activityCol.textContent = `${capitalize(entry.activity)} for ${entry.amount} ${entry.units}.`;
+        activityCol.textContent = `${capitalize(entry.activity)} for ${entry.amount} ${entry.units}`;
         row.appendChild(dateCol);
         row.appendChild(activityCol);
         table.appendChild(row);
@@ -118,7 +118,7 @@ async function updateTable() {
     let dateCol = document.createElement('td');
     dateCol.textContent = entry.date;
     let activityCol = document.createElement('td');
-    activityCol.textContent = `${capitalize(entry.activity)} for ${entry.amount} ${entry.units}.`;
+    activityCol.textContent = `${capitalize(entry.activity)} for ${entry.amount} ${entry.units}`;
     row.appendChild(dateCol);
     row.appendChild(activityCol);
     table.appendChild(row);

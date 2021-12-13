@@ -132,6 +132,7 @@ h2 {
     text-align: left;
     background-color: var(--light-gray);
     color: var(--main-green);
+    font-weight: 600;
 }
 
 /* Overlay */
