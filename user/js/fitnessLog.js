@@ -43,8 +43,6 @@ pastActDropdown.addEventListener('change', function() {
 
 // Submit past activity form
 pastActSubmitBtn.addEventListener('click', function() {
-    let pastActForm = document.getElementById('pastAct-form');
-
     // Activity Data to Send to Server
     let data = {
         date: document.getElementById('pastAct-date').value,
