@@ -166,7 +166,10 @@ app.get('/all', async function (req, res){
 app.get('/reminder', isAuthenticated, async function(req, res) {
     console.log("Server is getting most recent entry");
     let userIdProfile = req.user.useridData;
-    res.send(await dbo.get_most_recent_entry(userIdProfile));
+    let result = await dbo.get_most_recent_entry(userIdProfile);
+    console.log("RESULTS DATE = ", formatDate(result.date));
+    result.date = formatDate(result.date);
+    res.send(result);
 });
 
 // next, put all queries (like store or reminder ... notice the isAuthenticated 
@@ -245,4 +248,11 @@ function fileNotFound(req, res) {
     res.type('text/plain');
     res.status(404);
     res.send('Cannot find '+url);
+}
+
+// Convert from Unix time to JavaScript DateTime
+function formatDate(timestamp) {
+    const dateObject = new Date(timestamp)
+    const dateTime = dateObject.toLocaleString();
+    return dateTime.split(',')[0];
 }
