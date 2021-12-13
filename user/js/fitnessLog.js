@@ -62,7 +62,7 @@ pastActSubmitBtn.addEventListener('click', function() {
     overlayBackground.classList.add('hide');
 
     // Add an entry in the table with activity.date, and activity. the other stuff
-    updateTable(data);
+    updateTable();
 
     console.log('Past Activity Sending:', data);
 
@@ -89,22 +89,48 @@ pastActSubmitBtn.addEventListener('click', function() {
     document.getElementById('pastAct-unit').value = "km";
 });
 
-async function updateTable() {
-    console.log("updating table");
+async function createTableRows() {
+    document.getElementById('no-entries').classList.add('hide');
     let entries = await getAllEntries();
-
     let table = document.getElementById('activities');
-    
+
     for (let entry of entries) {
         let row = document.createElement('tr');
         let dateCol = document.createElement('td');
         dateCol.textContent = entry.date;
         let activityCol = document.createElement('td');
-        activityCol.textContent = `${capitalize(entry.activity)} for ${entry.amount}.`;
+        activityCol.textContent = `${capitalize(entry.activity)} for ${entry.amount} ${entry.units}.`;
         row.appendChild(dateCol);
         row.appendChild(activityCol);
         table.appendChild(row);
     }
+}
+
+async function updateTable() {
+    console.log("updating table");
+    let entry = await getMostRecentEntry();
+    let table = document.getElementById('activities');
+
+    let row = document.createElement('tr');
+    let dateCol = document.createElement('td');
+    dateCol.textContent = entry.date;
+    let activityCol = document.createElement('td');
+    activityCol.textContent = `${capitalize(entry.activity)} for ${entry.amount} ${entry.units}.`;
+    row.appendChild(dateCol);
+    row.appendChild(activityCol);
+    table.appendChild(row);
+}
+
+// Fetch the most recent entry from the database
+async function getMostRecentEntry() {
+    let response = await fetch('/reminder', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    
+    return response.json()
 }
 
 // Fetch all entries from the database
@@ -114,7 +140,7 @@ async function getAllEntries() {
         headers: {
             'Content-Type': 'application/json'
         }
-    })
+    });
     
     return response.json()
 }

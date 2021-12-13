@@ -56,7 +56,7 @@ main {
     padding: 40px;
     padding-top: 60px;
     width: calc(100vw - 370px);
-    height: auto;
+    height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
 }

@@ -22,11 +22,23 @@ db.get(cmd, function (err, val) {
   }
 });
 
+// function to delete the table
+function deleteActivityTable() {
+  const cmd = 'DROP TABLE ActivityTable';
+  db.run(cmd, function(err, val) {
+    if (err) {
+      console.log("Database creation failure",err.message);
+    } else {
+      console.log("Created database");
+    }
+  });
+}
+
 // called to create table if needed
 function createActivityTable() {
   // explicitly declaring the rowIdNum protects rowids from changing if the 
   // table is compacted; not an issue here, but good practice
-  const cmd = 'CREATE TABLE ActivityTable (rowIdNum INTEGER PRIMARY KEY, activity TEXT, date INTEGER, amount FLOAT, userid TEXT)';
+  const cmd = 'CREATE TABLE ActivityTable (rowIdNum INTEGER PRIMARY KEY, activity TEXT, date INTEGER, amount FLOAT, units TEXT, userid TEXT)';
   db.run(cmd, function(err, val) {
     if (err) {
       console.log("Database creation failure",err.message);

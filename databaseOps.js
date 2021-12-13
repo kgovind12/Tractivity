@@ -23,12 +23,12 @@ const db = require('./sqlWrap');
 const act = require('./activity');
 
 // SQL commands for ActivityTable
-const insertDB = "insert into ActivityTable (activity, date, amount, userid) values (?,?,?,?)"
+const insertDB = "insert into ActivityTable (activity, date, amount, units, userid) values (?,?,?,?,?)"
 // const getOneDB = "select * from ActivityTable where activity = ? and date = ?";
 // const allDB = "select * from ActivityTable where activity = ?";
 const deletePrevPlannedDB = "DELETE FROM ActivityTable WHERE amount < 0 and date BETWEEN ? and ? and userid = ?";
 const getMostRecentPrevPlannedDB = "SELECT rowIdNum, activity, MAX(date), amount, userid FROM ActivityTable WHERE amount <= 0 and date BETWEEN ? and ? and userid = ?";
-const getMostRecentDB = "SELECT MAX(rowIdNum), activity, date, amount, userid FROM ActivityTable WHERE userid = ?";
+const getMostRecentDB = "SELECT MAX(rowIdNum), activity, date, amount, units, userid FROM ActivityTable WHERE userid = ?";
 const getPastWeekByActivityDB = "SELECT * FROM ActivityTable WHERE activity = ? and userid = ? and date BETWEEN ? and ? ORDER BY date ASC";
 const geteverything = "select * from ActivityTable";
 
@@ -128,7 +128,7 @@ async function post_activity(activity, useridProfile) {
     console.log("Activity table: ",acttable);
 
   } catch (error) {
-    console.log("error", error)
+    console.log("this is where the error", error)
   }
 }
 

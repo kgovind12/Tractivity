@@ -81,6 +81,7 @@ app.use(express.static('public'))
 // This is where the server recieves and responds to store POST requests
 app.post('/store', isAuthenticated, async function(request, response, next) {
     console.log("Server recieved a post request at", request.url);
+    console.log("request body = ", request.body);
 
     let activity = act.Activity(request.body)
     let useridProfile = request.user.useridData;
@@ -160,6 +161,13 @@ app.use(express.json());
 app.get('/all', async function (req, res){
     res.send(await dbo.get_all())
 }); 
+
+// Get most recent entry from db
+app.get('/reminder', isAuthenticated, async function(req, res) {
+    console.log("Server is getting most recent entry");
+    let userIdProfile = req.user.useridData;
+    res.send(await dbo.get_most_recent_entry(userIdProfile));
+});
 
 // next, put all queries (like store or reminder ... notice the isAuthenticated 
 // middleware function; queries are only handled if the user is logged in

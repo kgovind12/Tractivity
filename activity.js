@@ -12,12 +12,15 @@ module.exports = {
  * @param {string} obj.date
  * @param {string} obj.activity
  * @param {float} obj.scalar
+ * @param {string} obj.units
  * @returns {Object} activity - stores activity data built into an activity object
  * @returns {string} activity.date
  * @returns {string} activity.activity
  * @returns {float} activity.scalar
+ * @returns {string} activity.units
  */
 function Activity(obj) {
+    console.log("OBJECT IN ACTIVITY = ", obj);
     let activity = null
 
     // if mm-dd-yyyy, convert to ms since 1970
@@ -25,17 +28,19 @@ function Activity(obj) {
         obj.date = (new Date(obj.date.replace('-','/'))).getTime()
     }
 
-    if (obj.date && obj.activity && obj.scalar) {
+    if (obj.date && obj.activity && obj.scalar && obj.units) {
         activity = {
             date: obj.date,
             activity: obj.activity,
-            scalar: obj.scalar
+            scalar: obj.scalar,
+            units: obj.units
         }
     } else if (obj.date && obj.activity) {
         activity = {
             date: obj.date,
             activity: obj.activity,
-            scalar: -1
+            scalar: -1,
+            units: -1
         }
     }
 
@@ -68,5 +73,5 @@ function ActivityToList(activity, useridProfile) {
         throw new ActivityFormatException(activity)
     }
 
-    return [activity.activity, activity.date, activity.scalar, useridProfile]
+    return [activity.activity, activity.date, activity.scalar, activity.units, useridProfile]
 }
