@@ -1,0 +1,21 @@
+{
+  "name": "fitnessapp",
+  "version": "1.0.0",
+  "description": "Fitness app to log workouts and plan future fitness goals.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Krithika Govind, Mandeepika Saini, Keya Barve",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.1",
+    "cookie-session": "^1.4.0",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "passport": "^0.5.0",
+    "passport-google-oauth20": "^2.0.0",
+    "sqlite3": "^5.0.2"
+  }
+}
