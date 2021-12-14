@@ -36,7 +36,7 @@ futureActSubmitBtn.addEventListener('click', function() {
     futureOverlayBackground.classList.add('hide');
 
     // Add an entry in the table
-    updateRows();
+    addRow();
 
     console.log('Future Activity Sending:', data);
 
@@ -86,7 +86,7 @@ async function createRows() {
     }
 }
 
-async function updateRows() {
+async function addRow() {
     console.log("updating future table");
     document.getElementById('future-no-entries').classList.add('hide');
     let entry = await getMostRecentEntry();
