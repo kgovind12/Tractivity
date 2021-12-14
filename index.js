@@ -17,6 +17,7 @@ const db = require('./sqlWrap');
 const act = require('./activity');
 
 // environment
+const dotenv = require('dotenv');
 require('dotenv').config();
 
 const MS_IN_DAY = 86400000
