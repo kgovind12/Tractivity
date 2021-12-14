@@ -222,8 +222,10 @@ app.get('/week', isAuthenticated, async function(request, response, next) {
 
     /* Fill Data Buckets With Activity Amounts */
     for(let i = 0 ; i < result.length; i++) {
-        let idx = Math.floor((date - result[i].date)/MS_IN_DAY)
-        data[idx].value += result[i].amount
+        if (result[i].amount != -1) {
+            let idx = Math.floor((date - result[i].date)/MS_IN_DAY)
+            data[idx].value += result[i].amount
+        }
     }
     
     // Send Client Activity for the Se;ected Week

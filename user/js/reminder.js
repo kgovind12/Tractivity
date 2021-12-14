@@ -39,7 +39,7 @@ document.getElementById('viewProgress-date').valueAsDate = newUTCDate();
 
 //defaults
 renderBarChart();
-renderLineGraph();
+// renderLineGraph();
 
 document.getElementById('view-activity-this-week-dropdown').addEventListener('change', renderBarChart);
 document.getElementById('view-activity-dropdown').addEventListener('change', renderLineGraph);
@@ -62,7 +62,6 @@ async function renderBarChart() {
     
     /* Fetch Activity Data for Week leading up to selected date */
     let dataOneWeek = await getDataForOneWeek(searchParams.date, searchParams.activity)
-    console.log("Data for the week ", dataOneWeek);
     if (searchParams.date + 0 * 86400000  <= newUTCDate().getTime()) {
         barchart.render(dataOneWeek, `${unit} ${action}`, 'Day of the Week');
     } else {
