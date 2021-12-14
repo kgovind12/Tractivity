@@ -19,6 +19,8 @@ const act = require('./activity');
 // environment
 require('dotenv').config();
 
+const MS_IN_DAY = 86400000
+
 // Google login credentials, used when the user contacts
 // Google, to tell them where he is trying to login to, and show
 // that this domain is registe`red for this service. 
@@ -174,6 +176,45 @@ app.get('/reminder', isAuthenticated, async function(req, res) {
     result.date = formatDate(result.date);
     res.send(result);
 });
+
+// This is where the server recieves and responds to week GET requests
+app.get('/week', isAuthenticated, async function(request, response, next) {
+    console.log("Server recieved a post request at", request.url);
+  
+    let date = parseInt(request.query.date)
+    let activity = request.query.activity
+    let useridProfile = request.user.useridData;
+    
+    /* Get Latest Activity in DB if not provided by query params */
+    if (activity === undefined) {
+      let result = await dbo.get_most_recent_entry(useridProfile)
+      try {
+        activity = result.activity
+      } catch(error) {
+        activity = "none"
+      }
+    }
+
+    /* Get Activity Data for current Date and The Week Prior */
+    let min = date - 6 * MS_IN_DAY
+    let max = date
+    let result = await dbo.get_similar_activities_in_range(activity, min, max, useridProfile)
+
+    /* Store Activity amounts in Buckets, Ascending by Date */
+    let data = Array.from({length: 7}, (_, i) => {
+        return { date: date - i * MS_IN_DAY, value: 0 }
+    })
+
+    /* Fill Data Buckets With Activity Amounts */
+    for(let i = 0 ; i < result.length; i++) {
+        let idx = Math.floor((date - result[i].date)/MS_IN_DAY)
+        data[idx].value += result[i].amount
+    }
+    
+    // Send Client Activity for the Se;ected Week
+    response.send(data.reverse());
+});
+
 
 // next, put all queries (like store or reminder ... notice the isAuthenticated 
 // middleware function; queries are only handled if the user is logged in

@@ -59,11 +59,6 @@ pastActSubmitBtn.addEventListener('click', function() {
     pastActOverlay.classList.add('hide');
     overlayBackground.classList.add('hide');
 
-    console.log("value date = ", data.date);
-
-    // data.date = removeTimeOfDay(new Date(data.date.replace('-','/'))).getTime();
-    console.log("New date = ", data.date)
-
     // Add an entry in the table
     updateTable();
 
@@ -178,12 +173,4 @@ function isValid(data) {
  function capitalize(s) {
     if (typeof s !== 'string') return ''
     return s.charAt(0).toUpperCase() + s.slice(1)
-}
-
-/**
- * Convert GMT date to UTC
- * @returns {Date} current date, but converts GMT date to UTC date
- */
-function removeTimeOfDay(gmtDate) {
-    return new Date(gmtDate.toLocaleDateString())
 }

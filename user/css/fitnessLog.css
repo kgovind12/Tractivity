@@ -8,7 +8,7 @@
 
 body {
     font-family: 'Readex Pro', sans-serif;
-    background-color: #ffffff;
+    background-color: white;
     min-width: 350px;
     overflow-x: hidden;
 }
@@ -69,8 +69,9 @@ h1 {
 }
 
 h2 {
-    font-size: 1em;
+    font-size: 1.2em;
     padding-top: 2rem;
+    color: var(--main-gray);
 }
 
 .subhead {
@@ -148,7 +149,6 @@ h2 {
     z-index: 1000;
     padding: 4rem 1rem;
     margin: 0 30px;
-    font-weight: 300;
 }
 
 .dark-bg {
@@ -170,14 +170,16 @@ h2 {
 }
 
 /* || Form Styles */
+/* Add form on activity logger */
 .form {
     display: flex;
     flex-direction: row;
     align-items: flex-end;
-    justify-content: space-evenly;
+    justify-content: flex-start;
+    font-weight: 300;
 }
 
-label, #submitPastActivity {
+#pastAct-form label, #submitPastActivity {
     width: 15%;
     margin: 10px;
 }
@@ -188,6 +190,16 @@ input, select {
     padding: 8px 10px;
     border-radius: 3px;
     width: 100%;
+}
+
+/* Progress form 2 */
+div#progress-form, div#this-week-progress-form {
+    padding-top: 2rem;
+}
+
+#progress-form label {
+    width: 30%;
+    margin-right: 40px;
 }
 
 .hide {
