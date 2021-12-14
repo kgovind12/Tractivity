@@ -14,6 +14,7 @@ const db = new sql.Database("activities.db");
 let cmd = " SELECT name FROM sqlite_master WHERE type='table' AND name='ActivityTable' ";
 
 db.get(cmd, function (err, val) {
+  // deleteActivityTable(); // for debugging
   if (val == undefined) {
         console.log("No database file - creating one");
         createActivityTable();
@@ -38,7 +39,7 @@ function deleteActivityTable() {
 function createActivityTable() {
   // explicitly declaring the rowIdNum protects rowids from changing if the 
   // table is compacted; not an issue here, but good practice
-  const cmd = 'CREATE TABLE ActivityTable (rowIdNum INTEGER PRIMARY KEY, activity TEXT, date INTEGER, amount FLOAT, units TEXT, userid TEXT)';
+  const cmd = 'CREATE TABLE ActivityTable (rowIdNum INTEGER PRIMARY KEY, activity TEXT, date INTEGER, amount FLOAT, units TEXT, postDate INTEGER, userid TEXT)';
   db.run(cmd, function(err, val) {
     if (err) {
       console.log("Database creation failure",err.message);

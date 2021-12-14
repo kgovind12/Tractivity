@@ -14,7 +14,8 @@ module.exports = {
   get_similar_activities_in_range: get_similar_activities_in_range,
   get_all: get_all,
   store_profile: store_profile,
-  get_profile: get_profile
+  get_profile: get_profile,
+  delete_activity: delete_activity
 }
 
 // using a Promises-wrapped version of sqlite3
@@ -24,12 +25,12 @@ const db = require('./sqlWrap');
 const act = require('./activity');
 
 // SQL commands for ActivityTable
-const insertDB = "insert into ActivityTable (activity, date, amount, units, userid) values (?,?,?,?,?)"
-// const getOneDB = "select * from ActivityTable where activity = ? and date = ?";
+const insertDB = "insert into ActivityTable (activity, date, amount, units, postDate, userid) values (?,?,?,?,?,?)"
+const getOneDB = "select * from ActivityTable where activity = ? and date = ?";
 // const allDB = "select * from ActivityTable where activity = ?";
 const deletePrevPlannedDB = "DELETE FROM ActivityTable WHERE amount < 0 and date BETWEEN ? and ? and userid = ?";
-const getMostRecentPrevPlannedDB = "SELECT rowIdNum, activity, MAX(date), amount, userid FROM ActivityTable WHERE amount <= 0 and date BETWEEN ? and ? and userid = ?";
-const getMostRecentDB = "SELECT MAX(rowIdNum), activity, date, amount, units, userid FROM ActivityTable WHERE userid = ?";
+const getMostRecentPrevPlannedDB = "SELECT rowIdNum, activity, MAX(date), amount, postDate, userid FROM ActivityTable WHERE amount <= 0 and date BETWEEN ? and ? and userid = ?";
+const getMostRecentDB = "SELECT MAX(rowIdNum), activity, date, amount, units, postDate, userid FROM ActivityTable WHERE userid = ?";
 const getPastWeekByActivityDB = "SELECT * FROM ActivityTable WHERE activity = ? and userid = ? and date BETWEEN ? and ? ORDER BY date ASC";
 const geteverything = "select * from ActivityTable";
 
@@ -129,7 +130,24 @@ async function post_activity(activity, useridProfile) {
     console.log("Activity table: ",acttable);
 
   } catch (error) {
-    console.log("this is where the error", error)
+    console.log("error", error)
+  }
+}
+
+/**
+ * Delete activity from the database
+ * @param {number} postDate The exact timestamp the entry was posted 
+ */
+ async function delete_activity(postDate, useridProfile) {
+  const cmd = "DELETE FROM ActivityTable WHERE postDate = ? and userid = ?";
+  try {
+    await db.run(cmd, [postDate, useridProfile]);
+
+    let acttable = await db.all(geteverything,[]);
+    console.log("Activity table after deleting: ",acttable);
+
+  } catch (error) {
+    console.log("error", error)
   }
 }
 

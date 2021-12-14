@@ -9,7 +9,6 @@ let futureActSubmitBtn = document.getElementById('submitFutureActivity');
 document.getElementById('futureAct-date').valueAsDate = newUTCDate();
 
 addFutureActBtn.addEventListener('click', function() {
-    console.log("open pressed");
     futureActOverlay.classList.remove('hide');
     futureOverlayBackground.classList.remove('hide');
 });
@@ -25,6 +24,7 @@ futureActSubmitBtn.addEventListener('click', function() {
     let data = {
         date: document.getElementById('futureAct-date').value,
         activity: document.getElementById('futureAct-activity').value.toLowerCase(),
+        postDate: (new Date()).getTime()
     }
 
     if (!futureActIsValid(data)) {  
@@ -61,6 +61,7 @@ futureActSubmitBtn.addEventListener('click', function() {
     document.getElementById('futureAct-activity').value = "Walk";
 });
 
+// Initialize all the rows with entries from db
 async function createRows() {
     let entries = await getAllEntries();
     let futureContainer = document.getElementById('future-activities');
@@ -77,21 +78,24 @@ async function createRows() {
             description.textContent = `${capitalize(entry.activity)} on ${entry.date}`;
             goalDiv.appendChild(description);
             let deleteOption = document.createElement('p');
-            deleteOption.className = 'reminder-option';
-            deleteOption.id = 'removeFutureAct';
+            deleteOption.className = 'reminder-option removeFutureAct';
+            deleteOption.id = `${entry.postDate}`;
             deleteOption.textContent = 'Remove';
             goalDiv.appendChild(deleteOption);
             futureContainer.appendChild(goalDiv);
         }
     }
+
+    handleDeletion(futureContainer);
 }
 
+
+// Add a new row
 async function addRow() {
-    console.log("updating future table");
+    console.log("adding row");
     document.getElementById('future-no-entries').classList.add('hide');
     let entry = await getMostRecentEntry();
     let futureContainer = document.getElementById('future-activities');
-    console.log("Entry = ", entry);
 
     // First checking if it is a future plan
     if (entry.amount == -1 && entry.units == -1) {
@@ -101,13 +105,52 @@ async function addRow() {
         description.textContent = `${capitalize(entry.activity)} on ${entry.date}`;
         goalDiv.appendChild(description);
         let deleteOption = document.createElement('p');
-        deleteOption.className = 'reminder-option';
-        deleteOption.id = 'removeFutureAct';
+        deleteOption.className = 'reminder-option removeFutureAct';
+        deleteOption.id = `${entry.postDate}`;
         deleteOption.textContent = 'Remove';
         goalDiv.appendChild(deleteOption);
         futureContainer.appendChild(goalDiv);
     }
+
+    handleDeletion(futureContainer);
 }
+
+
+function handleDeletion(container) {
+    const removeBtns = document.querySelectorAll('.removeFutureAct');
+
+    if (removeBtns.length > 0) {
+        removeBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                let data = {
+                    postDate: btn.id
+                }
+        
+                console.log('Future Activity Deleting:', data);
+
+                let deletedNode = document.getElementById(data.postDate).parentElement;
+        
+                // Post activity data to server
+                fetch(`/delete`, {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data), // post body
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Future Activity Deleted Successfully:', data);
+                    container.removeChild(deletedNode);
+                })
+                .catch((error) => {
+                    console.error('Future Activity Deletion Error:', error);
+                });
+            });
+        });
+    }
+}
+
 
 // Fetch the most recent entry from the database
 async function getMostRecentEntry() {
@@ -135,7 +178,6 @@ async function getAllEntries() {
 
 // Checks if future form is valid
 function futureActIsValid(data) {
-    console.log("data = ", data);
     let date = new Date(data.date.replace('-','/'))
     if ( date != "Invalid Date" && date < newUTCDate()) {
       return false

@@ -48,7 +48,8 @@ pastActSubmitBtn.addEventListener('click', function() {
         date: document.getElementById('pastAct-date').value,
         activity: document.getElementById('pastAct-activity').value.toLowerCase(),
         scalar: parseFloat(document.getElementById('pastAct-scalar').value),
-        units: document.getElementById('pastAct-unit').value
+        units: document.getElementById('pastAct-unit').value,
+        postDate: (new Date()).getTime()
     }
 
     if (!isValid(data)) {  

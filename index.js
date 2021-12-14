@@ -94,8 +94,18 @@ app.post('/store', isAuthenticated, async function(request, response, next) {
     response.send({ message: "I got your POST request"});
 });
 
+// Delete entry from database
+app.post('/delete', isAuthenticated, async function(request, response, next) {
+    console.log("Server received a post request at", request.url);
+    console.log("request body = ", request.body);
 
+    let postDate = request.body.postDate;
+    let userIdProfile = request.user.useridData;
 
+    await dbo.delete_activity(postDate, userIdProfile);
+    
+    response.send({message: "Activity deleted."});
+});
 
 
 // Public static files - /public should just contain the splash page
@@ -167,6 +177,7 @@ app.get('/all', isAuthenticated, async function (req, res){
     for (let result of results) {
         result.date = formatDate(result.date);
     }
+    console.log("ALL ENTRIES POST DATES = ", results);
     res.send(results);
 }); 
 
@@ -191,11 +202,14 @@ app.get('/reminder', isAuthenticated, async function(req, res) {
     let result = await dbo.get_most_recent_entry(userIdProfile);
 
     // only get the reminder if it is a future activity
-    if (result.amount == -1 && result.units == -1) {
-        result.date = formatDate(result.date);
-    } else {
-        result = null;
+    if (result) {
+        if (result.amount == -1 && result.units == -1) {
+            result.date = formatDate(result.date);
+        } else {
+            result = null;
+        }
     }
+
     res.send(result);
 });
 

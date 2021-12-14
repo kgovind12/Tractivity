@@ -33,14 +33,16 @@ function Activity(obj) {
             date: obj.date,
             activity: obj.activity,
             scalar: obj.scalar,
-            units: obj.units
+            units: obj.units,
+            postDate: obj.postDate
         }
-    } else if (obj.date && obj.activity) {
+    } else if (obj.date && obj.activity && obj.postDate) {
         activity = {
             date: obj.date,
             activity: obj.activity,
             scalar: -1,
-            units: -1
+            units: -1,
+            postDate: obj.postDate
         }
     }
 
@@ -73,5 +75,5 @@ function ActivityToList(activity, useridProfile) {
         throw new ActivityFormatException(activity)
     }
 
-    return [activity.activity, activity.date, activity.scalar, activity.units, useridProfile]
+    return [activity.activity, activity.date, activity.scalar, activity.units, activity.postDate, useridProfile]
 }
