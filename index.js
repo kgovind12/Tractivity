@@ -177,7 +177,6 @@ app.get('/all', isAuthenticated, async function (req, res){
     for (let result of results) {
         result.date = formatDate(result.date);
     }
-    console.log("ALL ENTRIES POST DATES = ", results);
     res.send(results);
 }); 
 
@@ -189,7 +188,6 @@ app.get('/index.html', isAuthenticated, async function(req, res) {
 });
 
 app.get('/index', isAuthenticated, async function(req, res) {
-    console.log
     let userIdProfile = req.user.useridData;
     let profile = await dbo.get_profile(userIdProfile);
     res.redirect(`/index.html?userName=${profile[0].firstname}`);

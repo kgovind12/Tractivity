@@ -129,6 +129,9 @@ function handleDeletion(container) {
                 console.log('Future Activity Deleting:', data);
 
                 let deletedNode = document.getElementById(data.postDate).parentElement;
+                console.log("deleted item = ", document.getElementById(data.postDate));
+                console.log("Deleted node = ", deletedNode);
+                console.log("Parent container = ", container);
         
                 // Post activity data to server
                 fetch(`/delete`, {
@@ -141,7 +144,9 @@ function handleDeletion(container) {
                 .then(response => response.json())
                 .then(data => {
                     console.log('Future Activity Deleted Successfully:', data);
-                    container.removeChild(deletedNode);
+                    if (container.contains(deletedNode)) {
+                        container.removeChild(deletedNode);
+                    } 
                 })
                 .catch((error) => {
                     console.error('Future Activity Deletion Error:', error);
