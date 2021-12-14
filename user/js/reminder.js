@@ -25,36 +25,43 @@ let reminderMap = {
     run: 'Run',
     swim: 'Swim',
     bike: 'Bike',
-    yoga: 'Practice Yoga',
-    soccer: 'Play Soccer',
-    basketball: 'Play Basketball',
+    yoga: 'Practice yoga',
+    soccer: 'Play soccer',
+    basketball: 'Play basketball',
 }
 
 let dayOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
 barchart.init('chart-anchor', 1000, 300);
 
+// Reminders
+let newReminder = await checkForReminders()
+
+// Dismiss reminder 
+document.getElementById('dismiss').addEventListener('click', function() {
+    document.getElementById('reminder-card').classList.add('hide');
+});
+
+
 /* Set default date in forms to current date */
 document.getElementById('viewProgress-date').valueAsDate = newUTCDate();
 
 //defaults
 renderBarChart();
-renderLineGraph();
 
 document.getElementById('view-activity-this-week-dropdown').addEventListener('change', renderBarChart);
-document.getElementById('view-activity-dropdown').addEventListener('change', renderLineGraph);
-document.getElementById('viewProgress-date').addEventListener('change', renderLineGraph);
+document.getElementById('viewProgress-date').addEventListener('change', renderBarChart);
 
 // Render first chart
 async function renderBarChart() {
     let searchParams = {
         activity: document.getElementById('view-activity-this-week-dropdown').value.toLowerCase(),
-        date: newUTCDate().getTime()
+        date: (new Date(
+            document.getElementById('viewProgress-date')
+                .value
+                .replace('-','/')
+        )).getTime()
     }
-
-    // console.log("Activity ", searchParams.activity);
-    // console.log("Today's date = ", newUTCDate().getTime());
-    // console.log("date = ", new Date(document.getElementById('viewProgress-date').value).getTime());
 
     /* Determine Y-Axis Label */
     let unit = unitMap[searchParams.activity] || 'none'
@@ -62,7 +69,6 @@ async function renderBarChart() {
     
     /* Fetch Activity Data for Week leading up to selected date */
     let dataOneWeek = await getDataForOneWeek(searchParams.date, searchParams.activity)
-    console.log("Data for the week ", dataOneWeek);
     if (searchParams.date + 0 * 86400000  <= newUTCDate().getTime()) {
         barchart.render(dataOneWeek, `${unit} ${action}`, 'Day of the Week');
     } else {
@@ -127,10 +133,75 @@ async function getAllData() {
 }
 
 /**
+ * Asks server if there are any pendiing activities to complete. if there are
+ * then a reminder section will be shown on the webpage to remind the user to
+ * complete the activity
+ */
+ async function checkForReminders() {
+    let mostRecent = await getReminder()
+
+    if (mostRecent.message) {
+        return 
+    }
+    
+    /* Determine date relative to current date */
+    let day = 'yesterday'
+    if (mostRecent.date != newUTCDate().getTime() - 86400000) {
+        day = dayOfWeek[(new Date(mostRecent.date)).getDay()]
+    }
+
+    /* Update text prompt of reminder section */
+    let reminderSection = document.getElementById('reminder-card')
+    let reminderQuestion = document.getElementById('reminder')
+    let mostRecentActivity = reminderMap[mostRecent.activity.toLowerCase()]
+    reminderQuestion.textContent = `${mostRecentActivity} on ${day}!`
+
+    return {
+      activity: mostRecent.activity,
+      date: mostRecent.date
+    }
+}
+
+/**
+ * Get Activity Reminder from Server 
+ */
+ function getReminder() {
+    return new Promise((resolve, reject) => {
+        fetch(`/reminder`, {
+            method: 'GET',
+            headers: {
+            'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+          console.log(response);
+          return response.json();})
+        .then(data => {
+            console.log('Reminder Success:', data);
+            resolve(data)
+        })
+        .catch((error) => {
+            console.error('Reminder Error:', error);
+            resolve(error)
+       })
+   });
+}
+
+/**
  * Convert GMT date to UTC
  * @returns {Date} current date, but converts GMT date to UTC date
  */
  function newUTCDate() {
     let gmtDate = new Date()
     return new Date(gmtDate.toLocaleDateString())
+}
+
+/**
+ * Capitalizes the first character of a string s
+ * @param {string} s - string to capitalize
+ * @returns {string} capitalized
+ */
+ function capitalize(s) {
+    if (typeof s !== 'string') return ''
+    return s.charAt(0).toUpperCase() + s.slice(1)
 }

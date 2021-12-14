@@ -168,6 +168,21 @@ app.get('/all', async function (req, res){
     res.send(results);
 }); 
 
+// Home
+app.get('/index.html', isAuthenticated, async function(req, res) {
+    console.log("HELLO I AM IN HEREEEE \n\n")
+    let userIdProfile = req.user.useridData;
+    let profile = await dbo.get_profile(userIdProfile);
+    res.redirect(`/index.html?userName=${profile[0].firstname}`);
+});
+
+app.get('/index', isAuthenticated, async function(req, res) {
+    console.log
+    let userIdProfile = req.user.useridData;
+    let profile = await dbo.get_profile(userIdProfile);
+    res.redirect(`/index.html?userName=${profile[0].firstname}`);
+});
+
 // Get most recent entry from db
 app.get('/reminder', isAuthenticated, async function(req, res) {
     console.log("Server is getting most recent entry");
@@ -207,8 +222,10 @@ app.get('/week', isAuthenticated, async function(request, response, next) {
 
     /* Fill Data Buckets With Activity Amounts */
     for(let i = 0 ; i < result.length; i++) {
-        let idx = Math.floor((date - result[i].date)/MS_IN_DAY)
-        data[idx].value += result[i].amount
+        if (result[i].amount != -1) {
+            let idx = Math.floor((date - result[i].date)/MS_IN_DAY)
+            data[idx].value += result[i].amount
+        }
     }
     
     // Send Client Activity for the Se;ected Week

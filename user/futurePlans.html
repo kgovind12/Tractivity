@@ -4,15 +4,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tractivity - Dashboard</title>
-
+    <title>Tractivity - Future Plans</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@200;300;400;500&display=swap" rel="stylesheet">
     <link href="./css/reset.css" rel="stylesheet" type="text/css" />
     <link href="./css/fitnessLog.css" rel="stylesheet" type="text/css" />
-    <script defer src="./js/fitnessLog.js"></script>
+    <script defer src="./js/futureLog.js"></script>
 </head>
 <body onload="createTableRows()">
     <div id="sidenav" class="sidenav">
@@ -20,40 +19,40 @@
             <img class="logo" src="./images/tractivity-logo-white.png" alt="Tractivity logo">
         </div>
         <a class="dashboard" href="index">Dashboard</a>
-        <a class="active" href="#">Past Activities</a>
-        <a href="futurePlans.html">Future plans</a>
+        <a href="pastActivity.html">Past Activities</a>
+        <a class="active" href="#">Future plans</a>
         <hr>
         <h4 class="subhead">Account</h4>
         <a href="logout" id="signout">Sign out</a>
     </div>
     <main>
-        <h1>Past Activities</h1>
+        <h1>Future Plans</h1>
 
-        <table id="activities" class="table"> 
+        <table id="future-activities" class="table"> 
             <tr>
                 <th class="date">Date</th>
                 <th class="activity">Activity</th>
             </tr>
         </table>
-        <p id="no-entries">There are no entries to show. Log a workout to begin your fitness journey!</p>
+        <p id="future-no-entries">No goals to show. Set a goal today!</p>
 
-        <button id="addPastActivity" class="btn">Add Activity</button>
+        <button id="addFutureActivity" class="btn">Add Goal</button>
     </main>
 
-    <!-- Past Activities Form -->
-    <div id="overlay-bg" class="dark-bg hide"></div>
-    <div class="add-overlay hide" id="pastAct-overlay">
-        <div class="close" id="close">&times;</div>
-        <div id="pastAct-form" class="form-container">
+    <!-- Future Activities Form -->
+    <div id="future-overlay-bg" class="dark-bg hide"></div>
+    <div class="add-overlay hide" id="futureAct-overlay">
+        <div class="close" id="future-close">&times;</div>
+        <div id="futureAct-form" class="form-container">
             <div class="form">
-                <label id="label-date">
+                <label>
                     Date:
-                    <input type="date" id="pastAct-date" />
+                    <input type="date" id="futureAct-date" />
                 </label>
 
                 <label>
                     Activity:
-                    <select name="past-activities" id="pastAct-activity">
+                    <select name="past-activities" id="futureAct-activity">
                         <option value="Walk">Walk</option>
                         <option value="Run">Run</option>
                         <option value="Swim">Swim</option>
@@ -63,18 +62,7 @@
                         <option value="Basketball">Basketball</option>
                     </select>
                 </label>
-                
-                <label id="label-scalar">
-                    Time/Distance:
-                    <input type="number" id="pastAct-scalar"/>
-                </label>
-
-                <label id="label-units">
-                    Units:
-                    <input type="text" name="text" id="pastAct-unit" value="km" readonly/>
-                </label>
-
-                <button type="button" id="submitPastActivity" class="btn form-button">Submit</button>
+                <button type="button" id="submitFutureActivity" class="btn form-button">Submit</button>
             </div>
         </div>
     </div>

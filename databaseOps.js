@@ -13,7 +13,8 @@ module.exports = {
   get_most_recent_entry: get_most_recent_entry,
   get_similar_activities_in_range: get_similar_activities_in_range,
   get_all: get_all,
-  store_profile: store_profile
+  store_profile: store_profile,
+  get_profile: get_profile
 }
 
 // using a Promises-wrapped version of sqlite3
@@ -249,6 +250,7 @@ async function get_all() {
 // SQL commands for ProfileTable
 const insertProfileDB = "insert into ProfileTable (userid, firstname) values (?,?)";
 const allProfileDB = "select * from ProfileTable";
+const getProfileDB = "select * from ProfileTable where userid = ?"
 
 // insert into profile table
 async function store_profile(profile) {
@@ -273,5 +275,16 @@ async function store_profile(profile) {
 
   } catch (error) {
     console.log("error", error)
+  }
+}
+
+// get profile from profile table
+async function get_profile(userIdProfile) {
+  try {
+    let result = await db.all(getProfileDB, [userIdProfile])
+    console.log("Profile table = ", result);
+    return result;
+  } catch (error) {
+    console.log("error", error);
   }
 }
