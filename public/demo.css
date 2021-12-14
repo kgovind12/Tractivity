@@ -8,7 +8,7 @@ html, body{
 }
 
 body{
-    font-family: "Open Sans", sans-serif;
+    font-family: 'Readex Pro', sans-serif;
     height: 100vh;
     width: 100vw;
     overflow: hidden;
@@ -50,6 +50,10 @@ h2 {
     width: 200px;
     height: auto;
     padding-bottom: 2rem;
+}
+
+.subtitle {
+    font-weight: 300;
 }
 
 #signin {

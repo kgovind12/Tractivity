@@ -159,7 +159,11 @@ app.get('/*',
 
 app.use(express.json());
 app.get('/all', async function (req, res){
-    res.send(await dbo.get_all())
+    let results = await dbo.get_all();
+    for (let result of results) {
+        result.date = formatDate(result.date);
+    }
+    res.send(results);
 }); 
 
 // Get most recent entry from db
@@ -167,7 +171,6 @@ app.get('/reminder', isAuthenticated, async function(req, res) {
     console.log("Server is getting most recent entry");
     let userIdProfile = req.user.useridData;
     let result = await dbo.get_most_recent_entry(userIdProfile);
-    console.log("RESULTS DATE = ", formatDate(result.date));
     result.date = formatDate(result.date);
     res.send(result);
 });

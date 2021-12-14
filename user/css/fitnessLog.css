@@ -7,7 +7,7 @@
 }
 
 body {
-    font-family: "Open Sans", sans-serif;
+    font-family: 'Readex Pro', sans-serif;
     background-color: #ffffff;
     min-width: 350px;
     overflow-x: hidden;
@@ -30,11 +30,12 @@ body {
     text-decoration: none;
     display: block;
     color: var(--main-gray);
+    font-weight: 300;
 }
 
 .sidenav a.active, .sidenav a:hover {
-    color: var(--main-green);
-    transition: 0.25s ease;
+    font-weight: 400;
+    transition: ease;
 }
 
 .logocontainer {
@@ -63,7 +64,8 @@ main {
 
 h1 {
     font-size: 1.7em;
-    font-weight: 500;
+    font-weight: 400;
+    color: var(--main-gray);
 }
 
 h2 {
@@ -73,7 +75,7 @@ h2 {
 
 .subhead {
     text-transform: uppercase;
-    font-weight: 600;
+    font-weight: 400;
     padding: 30px 8px 0px 32px;
     color: var(--main-gray);
 }
@@ -120,6 +122,7 @@ h2 {
 #activities td, #activities th {
     padding: 15px;
     border-bottom: 1px solid var(--light-gray);
+    font-weight: 300;
 }
 
 #activities th.date {
@@ -145,6 +148,7 @@ h2 {
     z-index: 1000;
     padding: 4rem 1rem;
     margin: 0 30px;
+    font-weight: 300;
 }
 
 .dark-bg {
