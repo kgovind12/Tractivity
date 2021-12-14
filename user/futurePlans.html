@@ -13,7 +13,7 @@
     <link href="./css/fitnessLog.css" rel="stylesheet" type="text/css" />
     <script defer src="./js/futureLog.js"></script>
 </head>
-<body>
+<body onload="createTableRows()">
     <div id="sidenav" class="sidenav">
         <div class="logocontainer">
             <img class="logo" src="./images/tractivity-logo-white.png" alt="Tractivity logo">
@@ -45,7 +45,7 @@
         <div class="close" id="future-close">&times;</div>
         <div id="futureAct-form" class="form-container">
             <div class="form">
-                <label id="futureAct-date">
+                <label>
                     Date:
                     <input type="date" id="futureAct-date" />
                 </label>

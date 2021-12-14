@@ -93,6 +93,25 @@ async function createTableRows() {
     let table = document.getElementById('activities');
 
     for (let entry of entries) {
+        if (entry.amount != -1 && entry.units != -1) {
+            let row = document.createElement('tr');
+            let dateCol = document.createElement('td');
+            dateCol.textContent = entry.date;
+            let activityCol = document.createElement('td');
+            activityCol.textContent = `${capitalize(entry.activity)} for ${entry.amount} ${entry.units}`;
+            row.appendChild(dateCol);
+            row.appendChild(activityCol);
+            table.appendChild(row);
+        }
+    }
+}
+
+async function updateTable() {
+    console.log("updating table");
+    let entry = await getMostRecentEntry();
+    let table = document.getElementById('activities');
+
+    if (entry.amount != -1 && entry.units != -1) {
         let row = document.createElement('tr');
         let dateCol = document.createElement('td');
         dateCol.textContent = entry.date;
@@ -102,21 +121,6 @@ async function createTableRows() {
         row.appendChild(activityCol);
         table.appendChild(row);
     }
-}
-
-async function updateTable() {
-    console.log("updating table");
-    let entry = await getMostRecentEntry();
-    let table = document.getElementById('activities');
-
-    let row = document.createElement('tr');
-    let dateCol = document.createElement('td');
-    dateCol.textContent = entry.date;
-    let activityCol = document.createElement('td');
-    activityCol.textContent = `${capitalize(entry.activity)} for ${entry.amount} ${entry.units}`;
-    row.appendChild(dateCol);
-    row.appendChild(activityCol);
-    table.appendChild(row);
 }
 
 // Fetch the most recent entry from the database
