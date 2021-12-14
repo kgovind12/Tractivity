@@ -246,7 +246,8 @@ app.use( fileNotFound );
 
 
 // listen for requests :)
-const listener = app.listen(3000, () => {
+const PORT = process.env.PORT || 3000;
+const listener = app.listen(PORT, () => {
     console.log("The static server is listening on port " + listener.address().port);
 });
 
