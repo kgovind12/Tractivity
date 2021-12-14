@@ -93,8 +93,12 @@ h2 {
 
 /* Past Activities */
 
-#no-entries {
-    padding: 20px 0;
+#no-entries, #future-no-entries {
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 40px;
+    font-weight: 300;
 }
 
 .btn {
@@ -114,25 +118,25 @@ h2 {
 
 /* Table styles */
 
-#activities {
+.table {
     border-collapse: collapse;
     width: 100%;
     margin: 30px 0;
 }
   
-#activities td, #activities th {
+.table td, .table th {
     padding: 15px;
     border-bottom: 1px solid var(--light-gray);
     font-weight: 300;
 }
 
-#activities th.date {
+.table th.date {
     width: 30%;
 }
 
-#activities tr:hover {background-color: var(--light-gray);}
+.table tr:hover {background-color: var(--light-gray);}
   
-#activities th {
+.table th {
     text-align: left;
     background-color: var(--light-gray);
     color: var(--main-green);
@@ -140,15 +144,16 @@ h2 {
 }
 
 /* Overlay */
-#pastAct-overlay {
+#pastAct-overlay, #futureAct-overlay {
     position: fixed;
     top: 50%;
-    left: 290px;
+    left: 50%;
     background-color: white;
-    transform: translate(0, -50%);
+    transform: translate(-50%, -50%);
     z-index: 1000;
     padding: 4rem 1rem;
     margin: 0 30px;
+    width: 70%;
 }
 
 .dark-bg {
@@ -171,7 +176,7 @@ h2 {
 
 /* || Form Styles */
 /* Add form on activity logger */
-.form {
+.progress-form {
     display: flex;
     flex-direction: row;
     align-items: flex-end;
@@ -179,9 +184,21 @@ h2 {
     font-weight: 300;
 }
 
+.form {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    font-weight: 300;
+}
+
 #pastAct-form label, #submitPastActivity {
     width: 15%;
     margin: 10px;
+}
+
+#futureAct-form label, #submitFutureActivity {
+    width: 25%;
 }
 
 input, select {
