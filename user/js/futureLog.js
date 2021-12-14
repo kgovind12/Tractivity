@@ -28,7 +28,7 @@ futureActSubmitBtn.addEventListener('click', function() {
     }
 
     if (!futureActIsValid(data)) {  
-        alert("Invalid Past Activity. Please fill in the entire form.");
+        alert("Invalid Future Activity. Please fill in the entire form.");
         return;
     }
 
@@ -60,16 +60,6 @@ futureActSubmitBtn.addEventListener('click', function() {
     document.getElementById('futureAct-date').valueAsDate = newUTCDate();
     document.getElementById('futureAct-activity').value = "Walk";
 });
-
-function futureActIsValid(data) {
-    console.log("data = ", data);
-    let date = new Date(data.date.replace('-','/'))
-    if ( date != "Invalid Date" && date < newUTCDate()) {
-      return false
-    }
-  
-    return !(data.date == "" || data.activity == "")
-}
 
 async function createTableRows() {
     document.getElementById('future-no-entries').classList.add('hide');
@@ -132,6 +122,17 @@ async function getAllEntries() {
     });
     
     return response.json()
+}
+
+// Checks if future form is valid
+function futureActIsValid(data) {
+    console.log("data = ", data);
+    let date = new Date(data.date.replace('-','/'))
+    if ( date != "Invalid Date" && date < newUTCDate()) {
+      return false
+    }
+  
+    return !(data.date == "" || data.activity == "")
 }
 
 /**

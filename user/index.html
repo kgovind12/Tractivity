@@ -32,6 +32,12 @@
     </div>
     <main>
         <h1>Welcome, <span id="username"></span>!</h1>
+        <div id="reminder-card" class="reminder-card">
+            <h3><span id="bold">Reminder: &nbsp;</span><span id="reminder"></span></h3>
+            <div id="reminder-option-wrapper">
+                <div id="dismiss" class="reminder-option">Dismiss</div>
+            </div>
+        </div>
         <h2>This Week:</h2>
         <div id="this-week-progress-form" class="progress-form">
             <label>
@@ -46,32 +52,13 @@
                     <option value="Basketball">Basketball</option>
                 </select>  
             </label>
+            <label>
+                For week ending:
+                <input type="date" id="viewProgress-date"/>
+            </label>
         </div>
         <div id="barchart-wrapper">
             <div id='chart-anchor'></div>
-        </div>
-
-        <div style="display: none;">
-            <h2>Past Weeks</h2>
-            <div id="progress-form" class="progress-form form">
-                <label>
-                    View Activity for:
-                    <select name="view-activities" id="view-activity-dropdown">
-                        <option value="Walk">Walk</option>
-                        <option value="Run">Run</option>
-                        <option value="Swim">Swim</option>
-                        <option value="Bike">Bike</option>
-                        <option value="Yoga">Yoga</option>
-                        <option value="Soccer">Soccer</option>
-                        <option value="Basketball">Basketball</option>
-                    </select>  
-                </label>
-                <label>
-                    For week ending:
-                    <input type="date" id="viewProgress-date"/>
-                </label>
-                <button type="button" id="submitProgressForm" class="btn form-button">Go</button>
-            </div>
         </div>
     </main>
 </body>

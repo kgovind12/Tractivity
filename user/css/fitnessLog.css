@@ -81,12 +81,6 @@ h2 {
     color: var(--main-gray);
 }
 
-.graph {
-    width: 100%;
-    height: auto;
-    padding: 1rem 0;
-}
-
 #signout {
     color: red;
 }
@@ -176,14 +170,6 @@ h2 {
 
 /* || Form Styles */
 /* Add form on activity logger */
-.progress-form {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-end;
-    justify-content: flex-start;
-    font-weight: 300;
-}
-
 .form {
     display: flex;
     flex-direction: row;
@@ -207,16 +193,6 @@ input, select {
     padding: 8px 10px;
     border-radius: 3px;
     width: 100%;
-}
-
-/* Progress form 2 */
-div#progress-form, div#this-week-progress-form {
-    padding-top: 2rem;
-}
-
-#progress-form label {
-    width: 30%;
-    margin-right: 40px;
 }
 
 .hide {
