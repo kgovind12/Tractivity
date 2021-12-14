@@ -11,9 +11,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@200;300;400;500&display=swap" rel="stylesheet">
     <link href="./css/reset.css" rel="stylesheet" type="text/css" />
     <link href="./css/fitnessLog.css" rel="stylesheet" type="text/css" />
+    <link href="./css/reminder.css" rel="stylesheet" type="text/css" />
     <script defer src="./js/futureLog.js"></script>
 </head>
-<body onload="createTableRows()">
+<body onload="createRows()">
     <div id="sidenav" class="sidenav">
         <div class="logocontainer">
             <img class="logo" src="./images/tractivity-logo-white.png" alt="Tractivity logo">
@@ -28,13 +29,9 @@
     <main>
         <h1>Future Plans</h1>
 
-        <table id="future-activities" class="table"> 
-            <tr>
-                <th class="date">Date</th>
-                <th class="activity">Activity</th>
-            </tr>
-        </table>
-        <p id="future-no-entries">No goals to show. Set a goal today!</p>
+        <div class="future-activities" id="future-activities">
+            <p id="future-no-entries">No goals to show. Set a goal today!</p>
+        </div>
 
         <button id="addFutureActivity" class="btn">Add Goal</button>
     </main>

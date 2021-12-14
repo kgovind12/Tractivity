@@ -235,9 +235,10 @@ function randomNumber(min, max, round = true) {
 }
 
 // dumps whole table; useful for debugging
-async function get_all() {
+async function get_all(userIdProfile) {
+  const cmd = "select * from ActivityTable where userid = ?";
   try {
-    let results = await db.all("select * from ActivityTable", []);
+    let results = await db.all(cmd, [userIdProfile]);
     return results;
   } 
   catch (error) {

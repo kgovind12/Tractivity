@@ -60,7 +60,7 @@ pastActSubmitBtn.addEventListener('click', function() {
     overlayBackground.classList.add('hide');
 
     // Add an entry in the table
-    updateTable();
+    addEntry();
 
     console.log('Past Activity Sending:', data);
 
@@ -88,9 +88,13 @@ pastActSubmitBtn.addEventListener('click', function() {
 });
 
 async function createTableRows() {
-    document.getElementById('no-entries').classList.add('hide');
     let entries = await getAllEntries();
     let table = document.getElementById('activities');
+
+    // If there is at least one entry, remove the 'no entries' text
+    if (entries.length > 0) {
+        document.getElementById('no-entries').classList.add('hide');
+    }
 
     for (let entry of entries) {
         if (entry.amount != -1 && entry.units != -1) {
@@ -106,8 +110,9 @@ async function createTableRows() {
     }
 }
 
-async function updateTable() {
+async function addEntry() {
     console.log("updating table");
+    document.getElementById('no-entries').classList.add('hide');
     let entry = await getMostRecentEntry();
     let table = document.getElementById('activities');
 

@@ -151,8 +151,8 @@ async function getAllData() {
     }
 
     /* Update text prompt of reminder section */
-    let reminderSection = document.getElementById('reminder-card')
-    let reminderQuestion = document.getElementById('reminder')
+    document.getElementById('reminder-card').classList.remove('hide');
+    let reminderQuestion = document.getElementById('reminder');
     let mostRecentActivity = reminderMap[mostRecent.activity.toLowerCase()]
     reminderQuestion.textContent = `${mostRecentActivity} on ${day}!`
 

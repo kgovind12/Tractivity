@@ -36,7 +36,7 @@ futureActSubmitBtn.addEventListener('click', function() {
     futureOverlayBackground.classList.add('hide');
 
     // Add an entry in the table
-    updateTable();
+    updateRows();
 
     console.log('Future Activity Sending:', data);
 
@@ -61,42 +61,51 @@ futureActSubmitBtn.addEventListener('click', function() {
     document.getElementById('futureAct-activity').value = "Walk";
 });
 
-async function createTableRows() {
-    document.getElementById('future-no-entries').classList.add('hide');
+async function createRows() {
     let entries = await getAllEntries();
-    let table = document.getElementById('future-activities');
+    let futureContainer = document.getElementById('future-activities');
+
+    if (entries.length > 0) {
+        document.getElementById('future-no-entries').classList.add('hide');
+    }
 
     for (let entry of entries) {
         if (entry.amount == -1 && entry.units == -1) {
-            let row = document.createElement('tr');
-            let dateCol = document.createElement('td');
-            dateCol.textContent = entry.date;
-            let activityCol = document.createElement('td');
-            activityCol.textContent = `${capitalize(entry.activity)}`;
-            row.appendChild(dateCol);
-            row.appendChild(activityCol);
-            table.appendChild(row);
+            let goalDiv = document.createElement('div');
+            goalDiv.className = 'goal';
+            let description = document.createElement('p');
+            description.textContent = `${capitalize(entry.activity)} on ${entry.date}`;
+            goalDiv.appendChild(description);
+            let deleteOption = document.createElement('p');
+            deleteOption.className = 'reminder-option';
+            deleteOption.id = 'removeFutureAct';
+            deleteOption.textContent = 'Remove';
+            goalDiv.appendChild(deleteOption);
+            futureContainer.appendChild(goalDiv);
         }
     }
 }
 
-async function updateTable() {
+async function updateRows() {
     console.log("updating future table");
     document.getElementById('future-no-entries').classList.add('hide');
     let entry = await getMostRecentEntry();
-    let table = document.getElementById('future-activities');
+    let futureContainer = document.getElementById('future-activities');
     console.log("Entry = ", entry);
 
     // First checking if it is a future plan
     if (entry.amount == -1 && entry.units == -1) {
-        let row = document.createElement('tr');
-        let dateCol = document.createElement('td');
-        dateCol.textContent = entry.date;
-        let activityCol = document.createElement('td');
-        activityCol.textContent = `${capitalize(entry.activity)}`;
-        row.appendChild(dateCol);
-        row.appendChild(activityCol);
-        table.appendChild(row);
+        let goalDiv = document.createElement('div');
+        goalDiv.className = 'goal';
+        let description = document.createElement('p');
+        description.textContent = `${capitalize(entry.activity)} on ${entry.date}`;
+        goalDiv.appendChild(description);
+        let deleteOption = document.createElement('p');
+        deleteOption.className = 'reminder-option';
+        deleteOption.id = 'removeFutureAct';
+        deleteOption.textContent = 'Remove';
+        goalDiv.appendChild(deleteOption);
+        futureContainer.appendChild(goalDiv);
     }
 }
 

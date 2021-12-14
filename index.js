@@ -161,8 +161,9 @@ app.get('/*',
 ); 
 
 app.use(express.json());
-app.get('/all', async function (req, res){
-    let results = await dbo.get_all();
+app.get('/all', isAuthenticated, async function (req, res){
+    let userIdProfile = req.user.useridData;
+    let results = await dbo.get_all(userIdProfile);
     for (let result of results) {
         result.date = formatDate(result.date);
     }
@@ -171,7 +172,6 @@ app.get('/all', async function (req, res){
 
 // Home
 app.get('/index.html', isAuthenticated, async function(req, res) {
-    console.log("HELLO I AM IN HEREEEE \n\n")
     let userIdProfile = req.user.useridData;
     let profile = await dbo.get_profile(userIdProfile);
     res.redirect(`/index.html?userName=${profile[0].firstname}`);
@@ -189,7 +189,9 @@ app.get('/reminder', isAuthenticated, async function(req, res) {
     console.log("Server is getting most recent entry");
     let userIdProfile = req.user.useridData;
     let result = await dbo.get_most_recent_entry(userIdProfile);
-    result.date = formatDate(result.date);
+    if (result) {
+        result.date = formatDate(result.date);
+    }
     res.send(result);
 });
 
