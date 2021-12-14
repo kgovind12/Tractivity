@@ -168,6 +168,21 @@ app.get('/all', async function (req, res){
     res.send(results);
 }); 
 
+// Home
+app.get('/index.html', isAuthenticated, async function(req, res) {
+    console.log("HELLO I AM IN HEREEEE \n\n")
+    let userIdProfile = req.user.useridData;
+    let profile = await dbo.get_profile(userIdProfile);
+    res.redirect(`/index.html?userName=${profile[0].firstname}`);
+});
+
+app.get('/index', isAuthenticated, async function(req, res) {
+    console.log
+    let userIdProfile = req.user.useridData;
+    let profile = await dbo.get_profile(userIdProfile);
+    res.redirect(`/index.html?userName=${profile[0].firstname}`);
+});
+
 // Get most recent entry from db
 app.get('/reminder', isAuthenticated, async function(req, res) {
     console.log("Server is getting most recent entry");
