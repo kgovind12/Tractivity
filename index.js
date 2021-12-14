@@ -189,8 +189,12 @@ app.get('/reminder', isAuthenticated, async function(req, res) {
     console.log("Server is getting most recent entry");
     let userIdProfile = req.user.useridData;
     let result = await dbo.get_most_recent_entry(userIdProfile);
-    if (result) {
+
+    // only get the reminder if it is a future activity
+    if (result.amount == -1 && result.units == -1) {
         result.date = formatDate(result.date);
+    } else {
+        result = null;
     }
     res.send(result);
 });
