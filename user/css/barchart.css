@@ -1,0 +1,57 @@
+:root {
+    --main-gray: rgb(77, 77, 77);
+    --main-green: #04AA6D;
+    --sidenav: #f5f5f5;
+    --light-gray: #ededed;
+    --overlay-bg: rgb(0,0,0,0.5);
+}
+
+/* #chart-anchor {
+    max-width: 1000px;
+  } */
+  
+  .barchart {
+    margin-top: 2rem;
+    padding: 2rem;
+    background: #ffffff;
+    box-shadow: 0px 0px 7px 2px rgba(0,0,0,0.1);
+    border-radius: 10px;
+  }
+  
+  /* To style the text content of the chart */
+  .barchart text {
+    font-family: 'Readex Pro', sans-serif;
+    font-weight: 300;
+    font-size: 10px;
+    color: var(--main-gray);
+  }
+  
+  /* To style the text of the axis labels */
+  .barchart-x-axis-label,
+  .barchart-y-axis-label {
+    font-size: 14px !important;
+    color: var(--main-green) !important;
+  }
+  
+  /* To style the bars */
+  .barchart-bar {
+    fill: var(--main-green);
+  }
+  
+  /* To style x axis lines */
+  .barchart-x-axis line,
+  .barchart-x-axis path {
+    stroke-width: 4px;
+  }
+  
+  /* To style y axis lines */
+  .barchart-y-axis line,
+  .barchart-y-axis path {
+    stroke-width: 4px;
+  }
+  
+  .tick line {
+    visibility: hidden;
+  }
+  
+  

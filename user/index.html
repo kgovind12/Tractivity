@@ -13,6 +13,10 @@
     <link href="./css/fitnessLog.css" rel="stylesheet" type="text/css" />
     <link href="./css/reminder.css" rel="stylesheet" type="text/css" />
     <link href="./css/barchart.css" rel="stylesheet">
+
+    <script defer src="./js/script.js"></script>
+    <script defer src="https://d3js.org/d3.v6.min.js"></script>
+    <script defer type="module" src="./js/reminder.js"></script>
 </head>
 <body>
     <div id="sidenav" class="sidenav">
@@ -24,15 +28,51 @@
         <a href="">Future plans</a>
         <hr>
         <h4 class="subhead">Account</h4>
-        <a href="" id="signout">Sign out</a>
+        <a href="logout" id="signout">Sign out</a>
     </div>
     <main>
-        <h1>Dashboard</h1>
+        <h1>Welcome, <span id="username"></span>!</h1>
         <h2>This Week:</h2>
-        <img class="graph" src="./images/line-graph.png" alt="Bar graph">
+        <div id="this-week-progress-form" class="progress-form form">
+            <label>
+                View Activity for:
+                <select name="view-activities" id="view-activity-this-week-dropdown">
+                    <option value="Walk">Walk</option>
+                    <option value="Run">Run</option>
+                    <option value="Swim">Swim</option>
+                    <option value="Bike">Bike</option>
+                    <option value="Yoga">Yoga</option>
+                    <option value="Soccer">Soccer</option>
+                    <option value="Basketball">Basketball</option>
+                </select>  
+            </label>
+        </div>
+        <div id="barchart-wrapper">
+            <div id='chart-anchor'></div>
+        </div>
 
-        <h2>Past Weeks</h2>
-        <img class="graph" src="./images/line-graph.png" alt="line graph">
+        <div style="display: none;">
+            <h2>Past Weeks</h2>
+            <div id="progress-form" class="progress-form form">
+                <label>
+                    View Activity for:
+                    <select name="view-activities" id="view-activity-dropdown">
+                        <option value="Walk">Walk</option>
+                        <option value="Run">Run</option>
+                        <option value="Swim">Swim</option>
+                        <option value="Bike">Bike</option>
+                        <option value="Yoga">Yoga</option>
+                        <option value="Soccer">Soccer</option>
+                        <option value="Basketball">Basketball</option>
+                    </select>  
+                </label>
+                <label>
+                    For week ending:
+                    <input type="date" id="viewProgress-date"/>
+                </label>
+                <button type="button" id="submitProgressForm" class="btn form-button">Go</button>
+            </div>
+        </div>
     </main>
 </body>
 </html>
