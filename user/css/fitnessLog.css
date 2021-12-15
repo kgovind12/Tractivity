@@ -183,6 +183,19 @@ h2 {
     font-weight: 300;
 }
 
+#futureAct-form .form {
+    justify-content: center;
+    width: auto;
+}
+
+#futureAct-form label {
+    margin: 0 1rem;
+}
+
+#submitPastActivity, #submitFutureActivity {
+    max-width: 20%;
+}
+
 #pastAct-form label, #submitPastActivity {
     width: 15%;
     margin: 10px;
