@@ -26,8 +26,23 @@ document.getElementById('close').addEventListener('click', function() {
 // On change date picker
 let datepicker = document.getElementById('pastDateFilter');
 datepicker.addEventListener('change', async function() {
+    if (!datepicker.value) {
+        document.getElementById('none-found').classList.add('hide');
+        createTableRows();
+        return;
+    }
+
+    // Hide the 'no entries' text
+    document.getElementById('no-entries').classList.add('hide');
+
     let selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
     let entries = await getEntriesByDate(selectedDate);
+
+    if (entries.length == 0) {
+        document.getElementById('none-found').classList.remove('hide');
+    } else {
+        document.getElementById('none-found').classList.add('hide');
+    }
 
     let table = document.getElementById('activities');
     while (table.children.length > 1) {
@@ -38,23 +53,17 @@ datepicker.addEventListener('change', async function() {
         document.getElementById('none-found').classList.remove('hide');
     }
     
-    for (let entry of entries) {
-        if (entry.amount != -1 && entry.units != -1) {
-            let row = document.createElement('tr');
-            let dateCol = document.createElement('td');
-            dateCol.textContent = entry.date;
-            let activityCol = document.createElement('td');
-            activityCol.textContent = `${capitalize(entry.activity)} for ${entry.amount} ${entry.units}`;
-            let deleteCol = document.createElement('td');
-            deleteCol.className = 'reminder-option removePastAct';
-            deleteCol.textContent = 'Remove';
-            deleteCol.id = `${entry.postDate}`;
-            row.appendChild(dateCol);
-            row.appendChild(activityCol);
-            row.appendChild(deleteCol);
-            table.appendChild(row);
+    if (datepicker.value) {
+        console.log("i have  avalue");
+        for (let entry of entries) {
+            if (entry.date == formatDate(selectedDate)) {
+                updateTable(entry, table);
+            }
         }
+    } else {
+        updateTable(entry, table);
     }
+
 
     handleDeletion(table);
 });
@@ -131,25 +140,26 @@ async function createTableRows() {
     let table = document.getElementById('activities');
 
     // If there is at least one entry, remove the 'no entries' text
+    // Remove the 'none found' text
     if (entries.length > 0) {
         document.getElementById('no-entries').classList.add('hide');
     }
 
-    for (let entry of entries) {
-        if (entry.amount != -1 && entry.units != -1) {
-            let row = document.createElement('tr');
-            let dateCol = document.createElement('td');
-            dateCol.textContent = entry.date;
-            let activityCol = document.createElement('td');
-            activityCol.textContent = `${capitalize(entry.activity)} for ${entry.amount} ${entry.units}`;
-            let deleteCol = document.createElement('td');
-            deleteCol.className = 'reminder-option removePastAct';
-            deleteCol.textContent = 'Remove';
-            deleteCol.id = `${entry.postDate}`;
-            row.appendChild(dateCol);
-            row.appendChild(activityCol);
-            row.appendChild(deleteCol);
-            table.appendChild(row);
+    let datepicker = document.getElementById('pastDateFilter');
+    let selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
+
+    if (datepicker.value) {
+        for (let entry of entries) {
+            if (entry.date == formatDate(selectedDate)) {
+                document.getElementById('none-found').classList.add('hide');
+                updateTable(entry, table);
+            } else {
+                document.getElementById('none-found').classList.add('hide');
+            }
+        }
+    } else {
+        for (let entry of entries) {
+            updateTable(entry, table);
         }
     }
 
@@ -157,11 +167,28 @@ async function createTableRows() {
 }
 
 async function addEntry() {
-    console.log("updating table");
     document.getElementById('no-entries').classList.add('hide');
     let entry = await getMostRecentEntry();
     let table = document.getElementById('activities');
 
+    let datepicker = document.getElementById('pastDateFilter');
+    let selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
+    if (datepicker.value) {
+        if (entry.date == formatDate(selectedDate)) {
+            document.getElementById('none-found').classList.add('hide');
+            updateTable(entry, table);
+        } else {
+            document.getElementById('none-found').classList.add('hide');
+        }
+    } else {
+        updateTable(entry, table);
+    }
+    
+    handleDeletion(table);
+}
+
+function updateTable(entry, table) {
+    console.log("updating table");
     if (entry.amount != -1 && entry.units != -1) {
         let row = document.createElement('tr');
         let dateCol = document.createElement('td');
@@ -177,8 +204,6 @@ async function addEntry() {
         row.appendChild(deleteCol);
         table.appendChild(row);
     }
-
-    handleDeletion(table);
 }
 
 function handleDeletion(container) {
@@ -289,4 +314,11 @@ function isValid(data) {
  function capitalize(s) {
     if (typeof s !== 'string') return ''
     return s.charAt(0).toUpperCase() + s.slice(1)
+}
+
+// Convert from Unix time to JavaScript DateTime
+function formatDate(timestamp) {
+    const dateObject = new Date(timestamp)
+    const dateTime = dateObject.toLocaleString();
+    return dateTime.split(',')[0];
 }
