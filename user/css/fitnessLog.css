@@ -193,6 +193,26 @@ input, select {
     padding: 8px 10px;
     border-radius: 3px;
     width: 100%;
+    -webkit-appearance: none;
+}
+
+select {
+    -webkit-padding-after: 10px;
+    -webkit-padding-before: 10px;
+}
+
+.dropdown {
+    position: relative;
+    display: flex;
+}
+
+.dropdown::after {
+    content: "\25be";
+    position: absolute;
+    color: var(--main-gray);
+    right: 10px;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .hide {
