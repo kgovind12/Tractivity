@@ -59,9 +59,12 @@ async function renderBarChart() {
         date: (new Date(
             document.getElementById('viewProgress-date')
                 .value
-                .replace('-','/')
+                .replace(/-/g,'/')
         )).getTime()
     }
+
+    console.log("date from param = ", searchParams.date);
+    console.log("current date = ", newUTCDate().getTime());
 
     /* Determine Y-Axis Label */
     let unit = unitMap[searchParams.activity] || 'none'

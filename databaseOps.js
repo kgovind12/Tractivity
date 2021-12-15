@@ -203,8 +203,6 @@ async function get_most_recent_entry(useridProfile) {
  * @returns {Array.<Activity>} similar activities
  */
 async function get_similar_activities_in_range(activityType, min, max, useridProfile) {
-  console.log("min = ", min);
-  console.log("max = ", max);
   try {
     let results = await db.all(getPastWeekByActivityDB, [activityType, useridProfile, min, max]);
     return results;

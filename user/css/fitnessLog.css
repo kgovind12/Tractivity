@@ -218,3 +218,7 @@ input, select {
     display: flex;
     justify-content: space-between;
 }
+
+p#future-no-entries {
+    padding-top: 2rem;
+}

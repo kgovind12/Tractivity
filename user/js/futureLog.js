@@ -65,13 +65,16 @@ futureActSubmitBtn.addEventListener('click', function() {
 async function createRows() {
     let entries = await getAllEntries();
     let futureContainer = document.getElementById('future-activities');
+    console.log("Entries = ", entries);
 
-    if (entries.length > 0) {
-        document.getElementById('future-no-entries').classList.add('hide');
-    }
+    // if (entries.length > 0) {
+    //     console.log("many entries")
+    //     document.getElementById('future-no-entries').classList.add('hide');
+    // }
 
     for (let entry of entries) {
         if (entry.amount == -1 && entry.units == -1) {
+            document.getElementById('future-no-entries').classList.add('hide');
             let goalDiv = document.createElement('div');
             goalDiv.className = 'goal';
             let description = document.createElement('p');
