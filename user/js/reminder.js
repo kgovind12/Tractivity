@@ -168,7 +168,7 @@ async function getAllData() {
 /**
  * Get Activity Reminder from Server 
  */
- function getReminder() {
+function getReminder() {
     return new Promise((resolve, reject) => {
         fetch(`/reminder`, {
             method: 'GET',
@@ -177,8 +177,9 @@ async function getAllData() {
             }
         })
         .then(response => {
-          console.log(response);
-          return response.json();})
+            console.log(response);
+            return response.json();
+        })
         .then(data => {
             console.log('Reminder Success:', data);
             resolve(data)
