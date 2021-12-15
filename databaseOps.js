@@ -15,7 +15,11 @@ module.exports = {
   get_all: get_all,
   store_profile: store_profile,
   get_profile: get_profile,
-  delete_activity: delete_activity
+  delete_activity: delete_activity,
+  get_past_entries_by_date: get_past_entries_by_date,
+  get_future_entries_by_date: get_future_entries_by_date,
+  get_all_past_entries: get_all_past_entries,
+  get_all_future_entries: get_all_future_entries
 }
 
 // using a Promises-wrapped version of sqlite3
@@ -28,11 +32,15 @@ const act = require('./activity');
 const insertDB = "insert into ActivityTable (activity, date, amount, units, postDate, userid) values (?,?,?,?,?,?)"
 const getOneDB = "select * from ActivityTable where activity = ? and date = ?";
 // const allDB = "select * from ActivityTable where activity = ?";
+const getPastActivityByDate = "SELECT * FROM ActivityTable WHERE amount != -1 AND units != -1 AND date = ? AND userid = ?";
+const getFutureActivityByDate = "SELECT * FROM ActivityTable WHERE amount = -1 AND units = -1 AND date = ? AND userid = ?";
 const deletePrevPlannedDB = "DELETE FROM ActivityTable WHERE amount < 0 and date BETWEEN ? and ? and userid = ?";
 const getMostRecentPrevPlannedDB = "SELECT rowIdNum, activity, MAX(date), amount, postDate, userid FROM ActivityTable WHERE amount <= 0 and date BETWEEN ? and ? and userid = ?";
 const getMostRecentDB = "SELECT MAX(rowIdNum), activity, date, amount, units, postDate, userid FROM ActivityTable WHERE userid = ?";
 const getPastWeekByActivityDB = "SELECT * FROM ActivityTable WHERE activity = ? and userid = ? and date BETWEEN ? and ? ORDER BY date ASC";
 const geteverything = "select * from ActivityTable";
+const getAllPastEntries = "select * from ActivityTable where amount != -1 and units != -1 and userid = ?";
+const getAllFutureEntries = "select * from ActivityTable where amount = -1 and units = -1 and userid = ?";
 
 // Testing function loads some data into DB. 
 // Is called when app starts up to put fake 
@@ -213,6 +221,40 @@ async function get_similar_activities_in_range(activityType, min, max, useridPro
   }
 }
 
+/**
+ * Get all past activities that have the specified date
+ * min and max date range
+ * @param {number} date - ms since 1970
+ * @returns {Array.<Activity>} activities with specific date
+ */
+ async function get_past_entries_by_date(date, useridProfile) {
+  try {
+    let results = await db.all(getPastActivityByDate, [date, useridProfile]);
+    return results;
+  }
+  catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+
+/**
+ * Get all future activities that have the specified date
+ * min and max date range
+ * @param {number} date - ms since 1970
+ * @returns {Array.<Activity>} activities with specific date
+ */
+ async function get_future_entries_by_date(date, useridProfile) {
+  try {
+    let results = await db.all(getFutureActivityByDate, [date, useridProfile]);
+    return results;
+  }
+  catch (error) {
+    console.log(error);
+    return [];
+  }
+}
 
 /**
  * Delete all activities that have the same activityType which fall within the 
@@ -255,6 +297,30 @@ async function get_all(userIdProfile) {
   const cmd = "select * from ActivityTable where userid = ?";
   try {
     let results = await db.all(cmd, [userIdProfile]);
+    return results;
+  } 
+  catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+// Gets all the past entries
+async function get_all_past_entries(userIdProfile) {
+  try {
+    let results = await db.all(getAllPastEntries, [userIdProfile]);
+    return results;
+  } 
+  catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+// Gets all the future entries
+async function get_all_future_entries(userIdProfile) {
+  try {
+    let results = await db.all(getAllFutureEntries, [userIdProfile]);
     return results;
   } 
   catch (error) {

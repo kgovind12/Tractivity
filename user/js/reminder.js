@@ -122,7 +122,7 @@ async function getDataForOneWeek(date, activity = null) {
 
 // Fetch all data
 async function getAllData() {
-    let response = await fetch('/all', {
+    let response = await fetch('/allfuture', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'

@@ -12,6 +12,7 @@ body {
     min-width: 350px;
     overflow: hidden;
     height: 100vh;
+    font-weight: 300;
 }
 
 .sidenav {
@@ -31,7 +32,6 @@ body {
     text-decoration: none;
     display: block;
     color: var(--main-gray);
-    font-weight: 300;
 }
 
 .sidenav a.active, .sidenav a:hover {
@@ -92,7 +92,6 @@ h2 {
     padding-right: 0;
     padding-top: 0;
     padding-bottom: 40px;
-    font-weight: 300;
 }
 
 .btn {
@@ -114,7 +113,7 @@ h2 {
 /* Table styles */
 
 .tablecontainer {
-    max-height: 600px;
+    max-height: 500px;
     overflow-y: scroll;
 }
 
@@ -127,7 +126,6 @@ h2 {
 .table td, .table th {
     padding: 15px;
     border-bottom: 1px solid var(--light-gray);
-    font-weight: 300;
 }
 
 .table th.date {
@@ -181,7 +179,6 @@ h2 {
     flex-direction: row;
     align-items: flex-end;
     justify-content: space-between;
-    font-weight: 300;
 }
 
 #futureAct-form .form {
@@ -234,6 +231,12 @@ select {
     transform: translate(-50%, -50%);
 }
 
+/* Past activity date picker */
+.datepicker {
+    margin-top: 2rem;
+    width: 30%;
+}
+
 .hide {
     display: none;
 }
@@ -246,7 +249,7 @@ select {
 /* Future plans */
 #future-activities {
     padding-bottom: 1rem;
-    max-height: 600px;
+    max-height: 500px;
     overflow-y: scroll;
     padding-left: 5px;
     padding-right: 5px;
@@ -257,11 +260,10 @@ select {
     padding: 1.3rem;
     border-radius: 8px;
     box-shadow: 0px 0px 7px 2px rgba(0,0,0,0.1);
-    font-weight: 300;
     display: flex;
     justify-content: space-between;
 }
 
-p#future-no-entries {
+p#future-no-entries, p#future-none-found {
     padding-top: 2rem;
 }

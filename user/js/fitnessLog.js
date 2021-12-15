@@ -22,6 +22,50 @@ document.getElementById('close').addEventListener('click', function() {
     overlayBackground.classList.add('hide');
 });
 
+
+// On change date picker
+let datepicker = document.getElementById('pastDateFilter');
+datepicker.addEventListener('change', async function() {
+    if (!datepicker.value) { // if datepicker is cleared
+        createTableRows();
+        return;
+    }
+
+    // Hide the 'no entries' text
+    document.getElementById('no-entries').classList.add('hide');
+
+    let selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
+    let entries = await getEntriesByDate(selectedDate);
+
+    if (entries.length == 0) {
+        document.getElementById('none-found').classList.remove('hide');
+    } else {
+        document.getElementById('none-found').classList.add('hide');
+    }
+
+    let table = document.getElementById('activities');
+    while (table.children.length > 1) {
+        table.removeChild(table.lastChild);
+    }
+
+    if (table.childNodes.length == 1) {
+        document.getElementById('none-found').classList.remove('hide');
+    }
+    
+    if (datepicker.value) {
+        for (let entry of entries) {
+            if (entry.date == formatDate(selectedDate)) {
+                updateTable(entry, table);
+            }
+        }
+    } else {
+        updateTable(entry, table);
+    }
+
+    handleDeletion(table);
+});
+
+
 pastActDropdown.addEventListener('change', function() {
     let pastActUnit = document.getElementById("pastAct-unit");
   
@@ -95,23 +139,26 @@ async function createTableRows() {
     // If there is at least one entry, remove the 'no entries' text
     if (entries.length > 0) {
         document.getElementById('no-entries').classList.add('hide');
+        document.getElementById('none-found').classList.add('hide');
     }
 
-    for (let entry of entries) {
-        if (entry.amount != -1 && entry.units != -1) {
-            let row = document.createElement('tr');
-            let dateCol = document.createElement('td');
-            dateCol.textContent = entry.date;
-            let activityCol = document.createElement('td');
-            activityCol.textContent = `${capitalize(entry.activity)} for ${entry.amount} ${entry.units}`;
-            let deleteCol = document.createElement('td');
-            deleteCol.className = 'reminder-option removePastAct';
-            deleteCol.textContent = 'Remove';
-            deleteCol.id = `${entry.postDate}`;
-            row.appendChild(dateCol);
-            row.appendChild(activityCol);
-            row.appendChild(deleteCol);
-            table.appendChild(row);
+    let datepicker = document.getElementById('pastDateFilter');
+    let selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
+
+    if (datepicker.value) {
+        for (let entry of entries) {
+            if (entry.date == formatDate(selectedDate)) {
+                document.getElementById('none-found').classList.add('hide');
+                updateTable(entry, table);
+            } else {
+                if (table.children.length <= 1) {
+                    document.getElementById('none-found').classList.remove('hide');
+                } 
+            }
+        }
+    } else {
+        for (let entry of entries) {
+            updateTable(entry, table);
         }
     }
 
@@ -119,13 +166,31 @@ async function createTableRows() {
 }
 
 async function addEntry() {
-    console.log("updating table");
     document.getElementById('no-entries').classList.add('hide');
     let entry = await getMostRecentEntry();
     let table = document.getElementById('activities');
 
-    console.log("Entry = ", entry);
+    let datepicker = document.getElementById('pastDateFilter');
+    let selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
+    if (datepicker.value) {
+        if (entry.date == formatDate(selectedDate)) {
+            document.getElementById('none-found').classList.add('hide');
+            updateTable(entry, table);
+        } else {
+            if (table.children.length <= 1) {
+                document.getElementById('none-found').classList.remove('hide');
+            } 
+        }
+    } else {
+        document.getElementById('none-found').classList.add('hide');
+        updateTable(entry, table);
+    }
+    
+    handleDeletion(table);
+}
 
+function updateTable(entry, table) {
+    console.log("updating table");
     if (entry.amount != -1 && entry.units != -1) {
         let row = document.createElement('tr');
         let dateCol = document.createElement('td');
@@ -141,8 +206,6 @@ async function addEntry() {
         row.appendChild(deleteCol);
         table.appendChild(row);
     }
-
-    handleDeletion(table);
 }
 
 function handleDeletion(container) {
@@ -158,7 +221,6 @@ function handleDeletion(container) {
                 console.log('Past Activity Deleting:', data);
 
                 let deletedRow = document.getElementById(data.postDate).parentElement;
-                console.log("deletedRow = ", deletedRow);
         
                 // Post activity data to server
                 fetch(`/delete`, {
@@ -198,9 +260,23 @@ async function getMostRecentEntry() {
     return response.json()
 }
 
+// Fetch entries with specific date from the database
+async function getEntriesByDate(date) {
+    let endpoint = `/bydatepast?date=${date}`;
+
+    let response = await fetch(endpoint, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    });
+    
+    return response.json()
+}
+
 // Fetch all entries from the database
 async function getAllEntries() {
-    let response = await fetch('/all', {
+    let response = await fetch('/allpast', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -240,4 +316,11 @@ function isValid(data) {
  function capitalize(s) {
     if (typeof s !== 'string') return ''
     return s.charAt(0).toUpperCase() + s.slice(1)
+}
+
+// Convert from Unix time to JavaScript DateTime
+function formatDate(timestamp) {
+    const dateObject = new Date(timestamp)
+    const dateTime = dateObject.toLocaleString();
+    return dateTime.split(',')[0];
 }
