@@ -67,11 +67,6 @@ async function createRows() {
     let futureContainer = document.getElementById('future-activities');
     console.log("Entries = ", entries);
 
-    // if (entries.length > 0) {
-    //     console.log("many entries")
-    //     document.getElementById('future-no-entries').classList.add('hide');
-    // }
-
     for (let entry of entries) {
         if (entry.amount == -1 && entry.units == -1) {
             document.getElementById('future-no-entries').classList.add('hide');
@@ -147,6 +142,9 @@ function handleDeletion(container) {
                     if (container.contains(deletedNode)) {
                         container.removeChild(deletedNode);
                     } 
+                    if (container.children.length == 1) {
+                        document.getElementById('future-no-entries').classList.remove('hide');
+                    }
                 })
                 .catch((error) => {
                     console.error('Future Activity Deletion Error:', error);
