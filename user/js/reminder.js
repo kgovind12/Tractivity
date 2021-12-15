@@ -63,9 +63,6 @@ async function renderBarChart() {
         )).getTime()
     }
 
-    console.log("date from param = ", searchParams.date);
-    console.log("current date = ", newUTCDate().getTime());
-
     /* Determine Y-Axis Label */
     let unit = unitMap[searchParams.activity] || 'none'
     let action = actionMap[searchParams.activity] || 'none'
