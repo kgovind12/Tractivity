@@ -108,7 +108,6 @@ futureActSubmitBtn.addEventListener('click', function() {
 async function createRows() {
     let entries = await getAllEntries();
     let futureContainer = document.getElementById('future-activities');
-    console.log("Entries = ", entries);
 
     // If there is at least one entry, remove the 'no entries' text
     if (entries.length > 0) {

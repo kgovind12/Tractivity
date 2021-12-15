@@ -37,7 +37,6 @@ datepicker.addEventListener('change', async function() {
     let selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
     let entries = await getEntriesByDate(selectedDate);
 
-    console.log("entries in filter = ", entries);
     if (entries.length == 0) {
         document.getElementById('none-found').classList.remove('hide');
     } else {
