@@ -104,11 +104,18 @@ async function createTableRows() {
             dateCol.textContent = entry.date;
             let activityCol = document.createElement('td');
             activityCol.textContent = `${capitalize(entry.activity)} for ${entry.amount} ${entry.units}`;
+            let deleteCol = document.createElement('td');
+            deleteCol.className = 'reminder-option removePastAct';
+            deleteCol.textContent = 'Remove';
+            deleteCol.id = `${entry.postDate}`;
             row.appendChild(dateCol);
             row.appendChild(activityCol);
+            row.appendChild(deleteCol);
             table.appendChild(row);
         }
     }
+
+    handleDeletion(table);
 }
 
 async function addEntry() {
@@ -117,15 +124,65 @@ async function addEntry() {
     let entry = await getMostRecentEntry();
     let table = document.getElementById('activities');
 
+    console.log("Entry = ", entry);
+
     if (entry.amount != -1 && entry.units != -1) {
         let row = document.createElement('tr');
         let dateCol = document.createElement('td');
         dateCol.textContent = entry.date;
         let activityCol = document.createElement('td');
         activityCol.textContent = `${capitalize(entry.activity)} for ${entry.amount} ${entry.units}`;
+        let deleteCol = document.createElement('td');
+        deleteCol.textContent = 'Remove';
+        deleteCol.className = 'reminder-option removePastAct';
+        deleteCol.id = `${entry.postDate}`;
         row.appendChild(dateCol);
         row.appendChild(activityCol);
+        row.appendChild(deleteCol);
         table.appendChild(row);
+    }
+
+    handleDeletion(table);
+}
+
+function handleDeletion(container) {
+    const removeBtns = document.querySelectorAll('.removePastAct');
+
+    if (removeBtns.length > 0) {
+        removeBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                let data = {
+                    postDate: btn.id
+                }
+        
+                console.log('Past Activity Deleting:', data);
+
+                let deletedRow = document.getElementById(data.postDate).parentElement;
+                console.log("deletedRow = ", deletedRow);
+        
+                // Post activity data to server
+                fetch(`/delete`, {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data), // post body
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Past Activity Deleted Successfully:', data);
+                    if (container.contains(deletedRow)) {
+                        container.removeChild(deletedRow);
+                    } 
+                    if (container.children.length == 1) {
+                        document.getElementById('no-entries').classList.remove('hide');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Past Activity Deletion Error:', error);
+                });
+            });
+        });
     }
 }
 

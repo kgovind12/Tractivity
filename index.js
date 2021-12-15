@@ -203,6 +203,8 @@ app.get('/recent', isAuthenticated, async function(req, res) {
         result.date = formatDate(result.date);
     }
 
+    console.log("RESPONSE HERE = ", result);
+
     res.send(result);
 });
 
