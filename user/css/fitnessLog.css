@@ -6,16 +6,12 @@
     --overlay-bg: rgb(0,0,0,0.5);
 }
 
-html, body {
-    height: 100%;
-}
-
 body {
     font-family: 'Readex Pro', sans-serif;
     background-color: white;
     min-width: 350px;
-    overflow-x: hidden;
-    min-height: 100%;
+    overflow: hidden;
+    height: 100vh;
 }
 
 .sidenav {
@@ -63,8 +59,7 @@ main {
     padding-top: 60px;
     width: calc(100vw - 420px);
     height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
 h1 {
@@ -109,6 +104,7 @@ h2 {
     transition: 0.3s;
     border-radius: 5px;
     cursor: pointer;
+    margin-top: 1rem;
 }
 
 .btn:hover {
@@ -116,6 +112,11 @@ h2 {
 }
 
 /* Table styles */
+
+.tablecontainer {
+    height: 600px;
+    overflow-y: auto;
+}
 
 .table {
     border-collapse: collapse;
@@ -245,6 +246,10 @@ select {
 /* Future plans */
 #future-activities {
     padding-bottom: 1rem;
+    max-height: 600px;
+    overflow-y: auto;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .goal {
