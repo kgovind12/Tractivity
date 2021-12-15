@@ -19,7 +19,9 @@ module.exports = {
   get_past_entries_by_date: get_past_entries_by_date,
   get_future_entries_by_date: get_future_entries_by_date,
   get_all_past_entries: get_all_past_entries,
-  get_all_future_entries: get_all_future_entries
+  get_all_future_entries: get_all_future_entries,
+  get_most_recent_past_entry: get_most_recent_past_entry,
+  get_most_recent_future_entry: get_most_recent_future_entry
 }
 
 // using a Promises-wrapped version of sqlite3
@@ -36,7 +38,8 @@ const getPastActivityByDate = "SELECT * FROM ActivityTable WHERE amount != -1 AN
 const getFutureActivityByDate = "SELECT * FROM ActivityTable WHERE amount = -1 AND units = -1 AND date = ? AND userid = ?";
 const deletePrevPlannedDB = "DELETE FROM ActivityTable WHERE amount < 0 and date BETWEEN ? and ? and userid = ?";
 const getMostRecentPrevPlannedDB = "SELECT rowIdNum, activity, MAX(date), amount, postDate, userid FROM ActivityTable WHERE amount <= 0 and date BETWEEN ? and ? and userid = ?";
-const getMostRecentDB = "SELECT MAX(rowIdNum), activity, date, amount, units, postDate, userid FROM ActivityTable WHERE userid = ?";
+const getMostRecentPastDB = "SELECT MAX(rowIdNum), activity, date, amount, units, postDate, userid FROM ActivityTable WHERE amount != -1 AND units != -1 AND userid = ?";
+const getMostRecentFutureDB = "SELECT MAX(rowIdNum), activity, date, amount, units, postDate, userid FROM ActivityTable WHERE amount = -1 AND units = -1 AND userid = ?";
 const getPastWeekByActivityDB = "SELECT * FROM ActivityTable WHERE activity = ? and userid = ? and date BETWEEN ? and ? ORDER BY date ASC";
 const geteverything = "select * from ActivityTable";
 const getAllPastEntries = "select * from ActivityTable where amount != -1 and units != -1 and userid = ?";
@@ -193,6 +196,42 @@ async function get_most_recent_planned_activity_in_range(min, max, useridProfile
 async function get_most_recent_entry(useridProfile) {
   try {
     let result = await db.get(getMostRecentDB, [useridProfile]);
+    return (result['MAX(rowIdNum)'] != null) ? result : null;
+  }
+  catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+/**
+ * Get the most recently inserted past activity in the database
+ * @returns {Activity} activity 
+ * @returns {string} activity.activity - type of activity
+ * @returns {number} activity.date - ms since 1970
+ * @returns {float} activity.scalar - measure of activity conducted
+ */
+ async function get_most_recent_past_entry(useridProfile) {
+  try {
+    let result = await db.get(getMostRecentPastDB, [useridProfile]);
+    return (result['MAX(rowIdNum)'] != null) ? result : null;
+  }
+  catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+/**
+ * Get the most recently inserted future activity in the database
+ * @returns {Activity} activity 
+ * @returns {string} activity.activity - type of activity
+ * @returns {number} activity.date - ms since 1970
+ * @returns {float} activity.scalar - measure of activity conducted
+ */
+ async function get_most_recent_future_entry(useridProfile) {
+  try {
+    let result = await db.get(getMostRecentFutureDB, [useridProfile]);
     return (result['MAX(rowIdNum)'] != null) ? result : null;
   }
   catch (error) {

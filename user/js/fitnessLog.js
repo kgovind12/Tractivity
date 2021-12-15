@@ -120,9 +120,11 @@ pastActSubmitBtn.addEventListener('click', function() {
     .then(response => response.json())
     .then(data => {
         console.log('Past Activity Success:', data);
+        showToast('Activity added!');
     })
     .catch((error) => {
         console.error('Past Activity Error:', error);
+        showToast('Error adding activity.');
     });
 
     // Reset form
@@ -233,6 +235,7 @@ function handleDeletion(container) {
                 .then(response => response.json())
                 .then(data => {
                     console.log('Past Activity Deleted Successfully:', data);
+                    showToast('Activity Deleted!');
                     if (container.contains(deletedRow)) {
                         container.removeChild(deletedRow);
                     } 
@@ -242,6 +245,7 @@ function handleDeletion(container) {
                 })
                 .catch((error) => {
                     console.error('Past Activity Deletion Error:', error);
+                    showToast('Error deleting activity.');
                 });
             });
         });
@@ -250,7 +254,7 @@ function handleDeletion(container) {
 
 // Fetch the most recent entry from the database
 async function getMostRecentEntry() {
-    let response = await fetch('/recent', {
+    let response = await fetch('/recentpast', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -323,4 +327,14 @@ function formatDate(timestamp) {
     const dateObject = new Date(timestamp)
     const dateTime = dateObject.toLocaleString();
     return dateTime.split(',')[0];
+}
+
+// Opens toast
+function showToast(message) {
+    var toast = document.getElementById('toast');
+    toast.className = 'show';
+    toast.textContent = message;
+    setTimeout(function(){ 
+        toast.className = toast.className.replace("show", ""); 
+    }, 2000);
 }
