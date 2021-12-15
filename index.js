@@ -171,9 +171,18 @@ app.get('/*',
 ); 
 
 app.use(express.json());
-app.get('/all', isAuthenticated, async function (req, res){
+app.get('/allpast', isAuthenticated, async function (req, res){
     let userIdProfile = req.user.useridData;
-    let results = await dbo.get_all(userIdProfile);
+    let results = await dbo.get_all_past_entries(userIdProfile);
+    for (let result of results) {
+        result.date = formatDate(result.date);
+    }
+    res.send(results);
+}); 
+
+app.get('/allfuture', isAuthenticated, async function (req, res){
+    let userIdProfile = req.user.useridData;
+    let results = await dbo.get_all_future_entries(userIdProfile);
     for (let result of results) {
         result.date = formatDate(result.date);
     }
@@ -206,20 +215,33 @@ app.get('/recent', isAuthenticated, async function(req, res) {
     res.send(result);
 });
 
-app.get('/bydate', isAuthenticated, async function(req, res) {
+app.get('/bydatepast', isAuthenticated, async function(req, res) {
     console.log("Server is getting entries by date");
     let userIdProfile = req.user.useridData;
     let date = parseInt(req.query.date);
 
-    console.log("DATE BEFORE SENDING \n", date);
-    let results = await dbo.get_entries_by_date(date, userIdProfile);
+    let results = await dbo.get_past_entries_by_date(date, userIdProfile);
 
     if (results) {
         for (let result of results) {
             result.date = formatDate(result.date);
         }
     }
-    console.log("results in bydate = ", results);
+    res.send(results);
+})
+
+app.get('/bydatefuture', isAuthenticated, async function(req, res) {
+    console.log("Server is getting entries by date");
+    let userIdProfile = req.user.useridData;
+    let date = parseInt(req.query.date);
+
+    let results = await dbo.get_future_entries_by_date(date, userIdProfile);
+
+    if (results) {
+        for (let result of results) {
+            result.date = formatDate(result.date);
+        }
+    }
     res.send(results);
 })
 

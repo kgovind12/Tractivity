@@ -18,6 +18,49 @@ document.getElementById('future-close').addEventListener('click', function() {
     futureOverlayBackground.classList.add('hide');
 });
 
+
+// On change date picker
+let datepicker = document.getElementById('futureDateFilter');
+datepicker.addEventListener('change', async function() {
+    if (!datepicker.value) {
+        createRows();
+        return;
+    }
+
+    // Hide the 'no entries' text
+    document.getElementById('future-no-entries').classList.add('hide');
+
+    let selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
+    let entries = await getEntriesByDate(selectedDate);
+
+    if (entries.length == 0) {
+        document.getElementById('future-none-found').classList.remove('hide');
+    } else {
+        document.getElementById('future-none-found').classList.add('hide');
+    }
+
+    let futureContainer = document.getElementById('future-activities');
+    while (futureContainer.children.length > 2) {
+        futureContainer.removeChild(futureContainer.lastChild);
+    }
+
+    if (futureContainer.childNodes.length == 1) {
+        document.getElementById('future-none-found').classList.remove('hide');
+    }
+    
+    if (datepicker.value) {
+        for (let entry of entries) {
+            if (entry.date == formatDate(selectedDate)) {
+                updateRows(entry, futureContainer);
+            }
+        }
+    } else {
+        updateRows(entry, futureContainer);
+    }
+
+    handleDeletion(futureContainer);
+});
+
 // Submit future activity form
 futureActSubmitBtn.addEventListener('click', function() {
     // Activity Data to Send to Server
@@ -67,20 +110,29 @@ async function createRows() {
     let futureContainer = document.getElementById('future-activities');
     console.log("Entries = ", entries);
 
-    for (let entry of entries) {
-        if (entry.amount == -1 && entry.units == -1) {
-            document.getElementById('future-no-entries').classList.add('hide');
-            let goalDiv = document.createElement('div');
-            goalDiv.className = 'goal';
-            let description = document.createElement('p');
-            description.textContent = `${capitalize(entry.activity)} on ${entry.date}`;
-            goalDiv.appendChild(description);
-            let deleteOption = document.createElement('p');
-            deleteOption.className = 'reminder-option removeFutureAct';
-            deleteOption.id = `${entry.postDate}`;
-            deleteOption.textContent = 'Remove';
-            goalDiv.appendChild(deleteOption);
-            futureContainer.appendChild(goalDiv);
+    // If there is at least one entry, remove the 'no entries' text
+    if (entries.length > 0) {
+        document.getElementById('future-no-entries').classList.add('hide');
+        document.getElementById('future-none-found').classList.add('hide');
+    }
+
+    let datepicker = document.getElementById('futureDateFilter');
+    let selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
+
+    if (datepicker.value) {
+        for (let entry of entries) {
+            if (entry.date == formatDate(selectedDate)) {
+                document.getElementById('future-none-found').classList.add('hide');
+                updateRows(entry, futureContainer);
+            } else {
+                if (futureContainer.children.length <= 2) {
+                    document.getElementById('future-none-found').classList.remove('hide');
+                } 
+            }
+        }
+    } else {
+        for (let entry of entries) {
+            updateRows(entry, futureContainer);
         }
     }
 
@@ -95,6 +147,28 @@ async function addRow() {
     let entry = await getMostRecentEntry();
     let futureContainer = document.getElementById('future-activities');
 
+    let datepicker = document.getElementById('futureDateFilter');
+    let selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
+    if (datepicker.value) {
+        if (entry.date == formatDate(selectedDate)) {
+            document.getElementById('future-none-found').classList.add('hide');
+            updateRows(entry, futureContainer);
+        } else {
+            if (futureContainer.children.length <= 2) {
+                document.getElementById('future-none-found').classList.remove('hide');
+            } 
+        }
+    } else {
+        document.getElementById('future-none-found').classList.add('hide');
+        updateRows(entry, futureContainer);
+    }
+
+    handleDeletion(futureContainer);
+}
+
+// Function to update the rows in the container
+function updateRows(entry, container) {
+    console.log("updating rows");
     // First checking if it is a future plan
     if (entry.amount == -1 && entry.units == -1) {
         let goalDiv = document.createElement('div');
@@ -107,12 +181,9 @@ async function addRow() {
         deleteOption.id = `${entry.postDate}`;
         deleteOption.textContent = 'Remove';
         goalDiv.appendChild(deleteOption);
-        futureContainer.appendChild(goalDiv);
+        container.appendChild(goalDiv);
     }
-
-    handleDeletion(futureContainer);
 }
-
 
 function handleDeletion(container) {
     const removeBtns = document.querySelectorAll('.removeFutureAct');
@@ -142,7 +213,7 @@ function handleDeletion(container) {
                     if (container.contains(deletedNode)) {
                         container.removeChild(deletedNode);
                     } 
-                    if (container.children.length == 1) {
+                    if (container.children.length == 2) {
                         document.getElementById('future-no-entries').classList.remove('hide');
                     }
                 })
@@ -167,9 +238,23 @@ async function getMostRecentEntry() {
     return response.json()
 }
 
+// Fetch entries with specific date from the database
+async function getEntriesByDate(date) {
+    let endpoint = `/bydatefuture?date=${date}`;
+
+    let response = await fetch(endpoint, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    });
+    
+    return response.json()
+}
+
 // Fetch all entries from the database
 async function getAllEntries() {
-    let response = await fetch('/all', {
+    let response = await fetch('/allfuture', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -206,4 +291,11 @@ function futureActIsValid(data) {
  function capitalize(s) {
     if (typeof s !== 'string') return ''
     return s.charAt(0).toUpperCase() + s.slice(1)
+}
+
+// Convert from Unix time to JavaScript DateTime
+function formatDate(timestamp) {
+    const dateObject = new Date(timestamp)
+    const dateTime = dateObject.toLocaleString();
+    return dateTime.split(',')[0];
 }

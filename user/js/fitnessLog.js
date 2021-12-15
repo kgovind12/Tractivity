@@ -26,8 +26,7 @@ document.getElementById('close').addEventListener('click', function() {
 // On change date picker
 let datepicker = document.getElementById('pastDateFilter');
 datepicker.addEventListener('change', async function() {
-    if (!datepicker.value) {
-        document.getElementById('none-found').classList.add('hide');
+    if (!datepicker.value) { // if datepicker is cleared
         createTableRows();
         return;
     }
@@ -38,6 +37,7 @@ datepicker.addEventListener('change', async function() {
     let selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
     let entries = await getEntriesByDate(selectedDate);
 
+    console.log("entries in filter = ", entries);
     if (entries.length == 0) {
         document.getElementById('none-found').classList.remove('hide');
     } else {
@@ -54,7 +54,6 @@ datepicker.addEventListener('change', async function() {
     }
     
     if (datepicker.value) {
-        console.log("i have  avalue");
         for (let entry of entries) {
             if (entry.date == formatDate(selectedDate)) {
                 updateTable(entry, table);
@@ -63,7 +62,6 @@ datepicker.addEventListener('change', async function() {
     } else {
         updateTable(entry, table);
     }
-
 
     handleDeletion(table);
 });
@@ -140,9 +138,9 @@ async function createTableRows() {
     let table = document.getElementById('activities');
 
     // If there is at least one entry, remove the 'no entries' text
-    // Remove the 'none found' text
     if (entries.length > 0) {
         document.getElementById('no-entries').classList.add('hide');
+        document.getElementById('none-found').classList.add('hide');
     }
 
     let datepicker = document.getElementById('pastDateFilter');
@@ -154,7 +152,9 @@ async function createTableRows() {
                 document.getElementById('none-found').classList.add('hide');
                 updateTable(entry, table);
             } else {
-                document.getElementById('none-found').classList.add('hide');
+                if (table.children.length <= 1) {
+                    document.getElementById('none-found').classList.remove('hide');
+                } 
             }
         }
     } else {
@@ -178,9 +178,12 @@ async function addEntry() {
             document.getElementById('none-found').classList.add('hide');
             updateTable(entry, table);
         } else {
-            document.getElementById('none-found').classList.add('hide');
+            if (table.children.length <= 1) {
+                document.getElementById('none-found').classList.remove('hide');
+            } 
         }
     } else {
+        document.getElementById('none-found').classList.add('hide');
         updateTable(entry, table);
     }
     
@@ -260,7 +263,7 @@ async function getMostRecentEntry() {
 
 // Fetch entries with specific date from the database
 async function getEntriesByDate(date) {
-    let endpoint = `/bydate?date=${date}`;
+    let endpoint = `/bydatepast?date=${date}`;
 
     let response = await fetch(endpoint, {
         method: 'GET',
@@ -274,7 +277,7 @@ async function getEntriesByDate(date) {
 
 // Fetch all entries from the database
 async function getAllEntries() {
-    let response = await fetch('/all', {
+    let response = await fetch('/allpast', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'

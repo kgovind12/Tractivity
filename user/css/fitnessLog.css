@@ -264,6 +264,6 @@ select {
     justify-content: space-between;
 }
 
-p#future-no-entries {
+p#future-no-entries, p#future-none-found {
     padding-top: 2rem;
 }
