@@ -22,6 +22,44 @@ document.getElementById('close').addEventListener('click', function() {
     overlayBackground.classList.add('hide');
 });
 
+
+// On change date picker
+let datepicker = document.getElementById('pastDateFilter');
+datepicker.addEventListener('change', async function() {
+    let selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
+    let entries = await getEntriesByDate(selectedDate);
+
+    let table = document.getElementById('activities');
+    while (table.children.length > 1) {
+        table.removeChild(table.lastChild);
+    }
+
+    if (table.childNodes.length == 1) {
+        document.getElementById('none-found').classList.remove('hide');
+    }
+    
+    for (let entry of entries) {
+        if (entry.amount != -1 && entry.units != -1) {
+            let row = document.createElement('tr');
+            let dateCol = document.createElement('td');
+            dateCol.textContent = entry.date;
+            let activityCol = document.createElement('td');
+            activityCol.textContent = `${capitalize(entry.activity)} for ${entry.amount} ${entry.units}`;
+            let deleteCol = document.createElement('td');
+            deleteCol.className = 'reminder-option removePastAct';
+            deleteCol.textContent = 'Remove';
+            deleteCol.id = `${entry.postDate}`;
+            row.appendChild(dateCol);
+            row.appendChild(activityCol);
+            row.appendChild(deleteCol);
+            table.appendChild(row);
+        }
+    }
+
+    handleDeletion(table);
+});
+
+
 pastActDropdown.addEventListener('change', function() {
     let pastActUnit = document.getElementById("pastAct-unit");
   
@@ -124,8 +162,6 @@ async function addEntry() {
     let entry = await getMostRecentEntry();
     let table = document.getElementById('activities');
 
-    console.log("Entry = ", entry);
-
     if (entry.amount != -1 && entry.units != -1) {
         let row = document.createElement('tr');
         let dateCol = document.createElement('td');
@@ -158,7 +194,6 @@ function handleDeletion(container) {
                 console.log('Past Activity Deleting:', data);
 
                 let deletedRow = document.getElementById(data.postDate).parentElement;
-                console.log("deletedRow = ", deletedRow);
         
                 // Post activity data to server
                 fetch(`/delete`, {
@@ -193,6 +228,20 @@ async function getMostRecentEntry() {
         headers: {
             'Content-Type': 'application/json'
         }
+    });
+    
+    return response.json()
+}
+
+// Fetch entries with specific date from the database
+async function getEntriesByDate(date) {
+    let endpoint = `/bydate?date=${date}`;
+
+    let response = await fetch(endpoint, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
     });
     
     return response.json()

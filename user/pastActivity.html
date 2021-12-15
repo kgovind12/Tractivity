@@ -31,6 +31,13 @@
     <main>
         <h1>Past Activities</h1>
 
+        <div class="datepicker">
+            <label>
+                Filter by date:
+                <input type="date" id="pastDateFilter">
+            </label>
+        </div>
+
         <div class="tablecontainer">
             <table id="activities" class="table"> 
                 <tr>
@@ -41,6 +48,7 @@
             </table>
         </div>
 
+        <p id="none-found" class="hide">There are no entries found for that date. Try another date!</p>
         <p id="no-entries">There are no entries to show. Log a workout to begin your fitness journey!</p>
 
         <button id="addPastActivity" class="btn">Add Activity</button>

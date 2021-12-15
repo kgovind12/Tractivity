@@ -15,7 +15,8 @@ module.exports = {
   get_all: get_all,
   store_profile: store_profile,
   get_profile: get_profile,
-  delete_activity: delete_activity
+  delete_activity: delete_activity,
+  get_entries_by_date: get_entries_by_date
 }
 
 // using a Promises-wrapped version of sqlite3
@@ -28,6 +29,7 @@ const act = require('./activity');
 const insertDB = "insert into ActivityTable (activity, date, amount, units, postDate, userid) values (?,?,?,?,?,?)"
 const getOneDB = "select * from ActivityTable where activity = ? and date = ?";
 // const allDB = "select * from ActivityTable where activity = ?";
+const getActivityByDate = "SELECT * FROM ActivityTable WHERE date = ? AND userid = ?";
 const deletePrevPlannedDB = "DELETE FROM ActivityTable WHERE amount < 0 and date BETWEEN ? and ? and userid = ?";
 const getMostRecentPrevPlannedDB = "SELECT rowIdNum, activity, MAX(date), amount, postDate, userid FROM ActivityTable WHERE amount <= 0 and date BETWEEN ? and ? and userid = ?";
 const getMostRecentDB = "SELECT MAX(rowIdNum), activity, date, amount, units, postDate, userid FROM ActivityTable WHERE userid = ?";
@@ -205,6 +207,23 @@ async function get_most_recent_entry(useridProfile) {
 async function get_similar_activities_in_range(activityType, min, max, useridProfile) {
   try {
     let results = await db.all(getPastWeekByActivityDB, [activityType, useridProfile, min, max]);
+    return results;
+  }
+  catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+/**
+ * Get all activities that have the specified date
+ * min and max date range
+ * @param {number} date - ms since 1970
+ * @returns {Array.<Activity>} activities with specific date
+ */
+ async function get_entries_by_date(date, useridProfile) {
+  try {
+    let results = await db.all(getActivityByDate, [date, useridProfile]);
     return results;
   }
   catch (error) {

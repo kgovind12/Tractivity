@@ -203,10 +203,25 @@ app.get('/recent', isAuthenticated, async function(req, res) {
         result.date = formatDate(result.date);
     }
 
-    console.log("RESPONSE HERE = ", result);
-
     res.send(result);
 });
+
+app.get('/bydate', isAuthenticated, async function(req, res) {
+    console.log("Server is getting entries by date");
+    let userIdProfile = req.user.useridData;
+    let date = parseInt(req.query.date);
+
+    console.log("DATE BEFORE SENDING \n", date);
+    let results = await dbo.get_entries_by_date(date, userIdProfile);
+
+    if (results) {
+        for (let result of results) {
+            result.date = formatDate(result.date);
+        }
+    }
+    console.log("results in bydate = ", results);
+    res.send(results);
+})
 
 // Get most recent future entry from db
 app.get('/reminder', isAuthenticated, async function(req, res) {
