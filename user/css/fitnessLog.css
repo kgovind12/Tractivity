@@ -115,7 +115,7 @@ h2 {
 
 .tablecontainer {
     height: 600px;
-    overflow-y: auto;
+    overflow-y: scroll;
 }
 
 .table {
@@ -247,7 +247,7 @@ select {
 #future-activities {
     padding-bottom: 1rem;
     max-height: 600px;
-    overflow-y: auto;
+    overflow-y: scroll;
     padding-left: 5px;
     padding-right: 5px;
 }
