@@ -94,9 +94,11 @@ futureActSubmitBtn.addEventListener('click', function() {
     .then(response => response.json())
     .then(data => {
         console.log('Future Activity Success:', data);
+        showToast('Activity added!');
     })
     .catch((error) => {
         console.error('Future Activity Error:', error);
+        showToast('Error adding activity.')
     });
 
     // Reset form
@@ -169,19 +171,17 @@ async function addRow() {
 function updateRows(entry, container) {
     console.log("updating rows");
     // First checking if it is a future plan
-    if (entry.amount == -1 && entry.units == -1) {
-        let goalDiv = document.createElement('div');
-        goalDiv.className = 'goal';
-        let description = document.createElement('p');
-        description.textContent = `${capitalize(entry.activity)} on ${entry.date}`;
-        goalDiv.appendChild(description);
-        let deleteOption = document.createElement('p');
-        deleteOption.className = 'reminder-option removeFutureAct';
-        deleteOption.id = `${entry.postDate}`;
-        deleteOption.textContent = 'Remove';
-        goalDiv.appendChild(deleteOption);
-        container.appendChild(goalDiv);
-    }
+    let goalDiv = document.createElement('div');
+    goalDiv.className = 'goal';
+    let description = document.createElement('p');
+    description.textContent = `${capitalize(entry.activity)} on ${entry.date}`;
+    goalDiv.appendChild(description);
+    let deleteOption = document.createElement('p');
+    deleteOption.className = 'reminder-option removeFutureAct';
+    deleteOption.id = `${entry.postDate}`;
+    deleteOption.textContent = 'Remove';
+    goalDiv.appendChild(deleteOption);
+    container.appendChild(goalDiv);
 }
 
 function handleDeletion(container) {
@@ -215,9 +215,11 @@ function handleDeletion(container) {
                     if (container.children.length == 2) {
                         document.getElementById('future-no-entries').classList.remove('hide');
                     }
+                    showToast('Activity deleted!');
                 })
                 .catch((error) => {
                     console.error('Future Activity Deletion Error:', error);
+                    showToast('Error deleting activity.')
                 });
             });
         });
@@ -227,7 +229,7 @@ function handleDeletion(container) {
 
 // Fetch the most recent entry from the database
 async function getMostRecentEntry() {
-    let response = await fetch('/recent', {
+    let response = await fetch('/recentfuture', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -297,4 +299,14 @@ function formatDate(timestamp) {
     const dateObject = new Date(timestamp)
     const dateTime = dateObject.toLocaleString();
     return dateTime.split(',')[0];
+}
+
+// Opens toast
+function showToast(message) {
+    var toast = document.getElementById('future-toast');
+    toast.className = 'show';
+    toast.textContent = message;
+    setTimeout(function(){ 
+        toast.className = toast.className.replace("show", ""); 
+    }, 2000);
 }

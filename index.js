@@ -202,11 +202,24 @@ app.get('/index', isAuthenticated, async function(req, res) {
     res.redirect(`/index.html?userName=${profile[0].firstname}`);
 });
 
-// Get most recent entry from db
-app.get('/recent', isAuthenticated, async function(req, res) {
+// Get most recent past entry from db
+app.get('/recentpast', isAuthenticated, async function(req, res) {
     console.log("Server is getting most recent entry");
     let userIdProfile = req.user.useridData;
-    let result = await dbo.get_most_recent_entry(userIdProfile);
+    let result = await dbo.get_most_recent_past_entry(userIdProfile);
+
+    if (result) {
+        result.date = formatDate(result.date);
+    }
+
+    res.send(result);
+});
+
+// Get most recent future entry from the db
+app.get('/recentfuture', isAuthenticated, async function(req, res) {
+    console.log("Server is getting most recent entry");
+    let userIdProfile = req.user.useridData;
+    let result = await dbo.get_most_recent_future_entry(userIdProfile);
 
     if (result) {
         result.date = formatDate(result.date);
