@@ -194,13 +194,30 @@ app.get('/index', isAuthenticated, async function(req, res) {
 });
 
 // Get most recent entry from db
-app.get('/reminder', isAuthenticated, async function(req, res) {
+app.get('/recent', isAuthenticated, async function(req, res) {
     console.log("Server is getting most recent entry");
     let userIdProfile = req.user.useridData;
     let result = await dbo.get_most_recent_entry(userIdProfile);
 
     if (result) {
         result.date = formatDate(result.date);
+    }
+
+    res.send(result);
+});
+
+// Get most recent future entry from db
+app.get('/reminder', isAuthenticated, async function(req, res) {
+    console.log("Server is getting reminder");
+    let userIdProfile = req.user.useridData;
+    let result = await dbo.get_most_recent_entry(userIdProfile);
+
+    if (result) {
+        if (result.amount == -1 && result.units == -1) {
+            result.date = formatDate(result.date);
+        } else {
+            result = null;
+        }
     }
 
     res.send(result);

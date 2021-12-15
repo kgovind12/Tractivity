@@ -159,7 +159,7 @@ function handleDeletion(container) {
 
 // Fetch the most recent entry from the database
 async function getMostRecentEntry() {
-    let response = await fetch('/reminder', {
+    let response = await fetch('/recent', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
