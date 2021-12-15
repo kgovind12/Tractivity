@@ -6,11 +6,16 @@
     --overlay-bg: rgb(0,0,0,0.5);
 }
 
+html, body {
+    height: 100%;
+}
+
 body {
     font-family: 'Readex Pro', sans-serif;
     background-color: white;
     min-width: 350px;
     overflow-x: hidden;
+    min-height: 100%;
 }
 
 .sidenav {
