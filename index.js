@@ -84,7 +84,6 @@ app.use(express.static('public'))
 // This is where the server recieves and responds to store POST requests
 app.post('/store', isAuthenticated, async function(request, response, next) {
     console.log("Server recieved a post request at", request.url);
-    console.log("request body = ", request.body);
 
     let activity = act.Activity(request.body)
     let useridProfile = request.user.useridData;
@@ -97,7 +96,6 @@ app.post('/store', isAuthenticated, async function(request, response, next) {
 // Delete entry from database
 app.post('/delete', isAuthenticated, async function(request, response, next) {
     console.log("Server received a post request at", request.url);
-    console.log("request body = ", request.body);
 
     let postDate = request.body.postDate;
     let userIdProfile = request.user.useridData;
@@ -233,6 +231,8 @@ app.get('/bydatepast', isAuthenticated, async function(req, res) {
     let userIdProfile = req.user.useridData;
     let date = parseInt(req.query.date);
 
+    // console.log("date in server = ", date);
+    // console.log("user id in server = ", userIdProfile);
     let results = await dbo.get_past_entries_by_date(date, userIdProfile);
 
     if (results) {

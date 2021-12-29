@@ -11,7 +11,7 @@ let pastActDropdown = document.getElementById('pastAct-activity');
 /* Set default date in forms to current date */
 document.getElementById('pastAct-date').valueAsDate = newUTCDate()
 
-// Set min date as today's date
+// Set max date as today's date
 let today = new Date();
 let dd = today.getDate();
 let mm = today.getMonth() + 1;
@@ -27,17 +27,19 @@ if (mm < 10) {
     
 today = yyyy + '-' + mm + '-' + dd;
 document.getElementById("pastDateFilter").setAttribute("max", today);
+document.getElementById('pastAct-date').setAttribute("max", today);
 
+// Open the past activity overlay when Add is clicked
 addPastActBtn.addEventListener("click", function() {
     pastActOverlay.classList.remove('hide');
     overlayBackground.classList.remove('hide');
 });
 
+// Hide overlay on close
 document.getElementById('close').addEventListener('click', function() {
     pastActOverlay.classList.add('hide');
     overlayBackground.classList.add('hide');
 });
-
 
 // On change date picker
 let datepicker = document.getElementById('pastDateFilter');
@@ -53,12 +55,14 @@ datepicker.addEventListener('change', async function() {
     let selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
     let entries = await getEntriesByDate(selectedDate);
 
+    // Show/hide none found text
     if (entries.length == 0) {
         document.getElementById('none-found').classList.remove('hide');
     } else {
         document.getElementById('none-found').classList.add('hide');
     }
 
+    // Clear the table's current rows
     let table = document.getElementById('activities');
     while (table.children.length > 1) {
         table.removeChild(table.lastChild);
@@ -68,14 +72,18 @@ datepicker.addEventListener('change', async function() {
         document.getElementById('none-found').classList.remove('hide');
     }
     
+    // If a date is selected, update the table rows according to date
+    // Else, just update the table
     if (datepicker.value) {
         for (let entry of entries) {
             if (entry.date == formatDate(selectedDate)) {
                 updateTable(entry, table);
             }
         }
-    } else {
-        updateTable(entry, table);
+    } else { 
+        for(let entry of entries) {
+            updateTable(entry, table);
+        }
     }
 
     handleDeletion(table);
@@ -85,7 +93,7 @@ datepicker.addEventListener('change', async function() {
 pastActDropdown.addEventListener('change', function() {
     let pastActUnit = document.getElementById("pastAct-unit");
   
-    /* Show Form, Hide 'Add New Activity' Button */
+    // Set units field based on which activity is selected
     switch (pastActDropdown.value) {
       case 'Walk': case 'Run': case 'Bike':
         pastActUnit.value = 'km';
@@ -103,9 +111,10 @@ pastActDropdown.addEventListener('change', function() {
 
 // Submit past activity form
 pastActSubmitBtn.addEventListener('click', function() {
+    let pastDatepicker = document.getElementById('pastAct-date');
     // Activity Data to Send to Server
     let data = {
-        date: document.getElementById('pastAct-date').value,
+        date: (new Date(pastDatepicker.value.replace(/-/g,'/'))).getTime(),
         activity: document.getElementById('pastAct-activity').value.toLowerCase(),
         scalar: parseFloat(document.getElementById('pastAct-scalar').value),
         units: document.getElementById('pastAct-unit').value,
@@ -117,6 +126,7 @@ pastActSubmitBtn.addEventListener('click', function() {
         return;
     }
 
+    // Hide the overlay
     pastActOverlay.classList.add('hide');
     overlayBackground.classList.add('hide');
 
@@ -150,6 +160,7 @@ pastActSubmitBtn.addEventListener('click', function() {
     document.getElementById('pastAct-unit').value = "km";
 });
 
+// Function to display the table initally on page load
 async function createTableRows() {
     let entries = await getAllEntries();
     let table = document.getElementById('activities');
@@ -163,12 +174,15 @@ async function createTableRows() {
     let datepicker = document.getElementById('pastDateFilter');
     let selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
 
+    // If datepicker is selected, update table according to selected date
+    // Else, just update table
     if (datepicker.value) {
         for (let entry of entries) {
+            // Show the entries whose date matches the selected date
             if (entry.date == formatDate(selectedDate)) {
                 document.getElementById('none-found').classList.add('hide');
                 updateTable(entry, table);
-            } else {
+            } else { // We repeatedly check whether the table is empty
                 if (table.children.length <= 1) {
                     document.getElementById('none-found').classList.remove('hide');
                 } 
@@ -183,6 +197,7 @@ async function createTableRows() {
     handleDeletion(table);
 }
 
+// Function to add a row to the table
 async function addEntry() {
     document.getElementById('no-entries').classList.add('hide');
     let entry = await getMostRecentEntry();
@@ -190,7 +205,10 @@ async function addEntry() {
 
     let datepicker = document.getElementById('pastDateFilter');
     let selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
+
     if (datepicker.value) {
+        // If the date of the added entry matches the selected date,
+        // display the entry here.
         if (entry.date == formatDate(selectedDate)) {
             document.getElementById('none-found').classList.add('hide');
             updateTable(entry, table);
@@ -207,6 +225,7 @@ async function addEntry() {
     handleDeletion(table);
 }
 
+// Function to update the table rows
 function updateTable(entry, table) {
     console.log("updating table");
     if (entry.amount != -1 && entry.units != -1) {
@@ -226,6 +245,7 @@ function updateTable(entry, table) {
     }
 }
 
+// Function to handle deleting an entry. 
 function handleDeletion(container) {
     const removeBtns = document.querySelectorAll('.removePastAct');
 
@@ -306,12 +326,12 @@ async function getAllEntries() {
     return response.json()
 }
 
-
+// Check if the data entered by the user is valid
 function isValid(data) {
-    let date = new Date(data.date.replace('-','/'))
-    if ( date != "Invalid Date" && date > newUTCDate()) {
-      return false
-    }
+    // let date = new Date(data.date.replace('-','/'))
+    // if ( date != "Invalid Date" && date > newUTCDate()) {
+    //   return false
+    // }
     if (isNaN(data.scalar) || data.scalar <= 0) {
       return false
     }

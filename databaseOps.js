@@ -195,7 +195,7 @@ async function get_most_recent_planned_activity_in_range(min, max, useridProfile
  */
 async function get_most_recent_entry(useridProfile) {
   try {
-    let result = await db.get(getMostRecentDB, [useridProfile]);
+    let result = await db.get(getMostRecentFutureDB, [useridProfile]);
     return (result['MAX(rowIdNum)'] != null) ? result : null;
   }
   catch (error) {

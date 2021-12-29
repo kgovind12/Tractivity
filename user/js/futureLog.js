@@ -24,6 +24,7 @@ if (mm < 10) {
     
 today = yyyy + '-' + mm + '-' + dd;
 document.getElementById("futureDateFilter").setAttribute("min", today);
+document.getElementById('futureAct-date').setAttribute("min", today);
 
 addFutureActBtn.addEventListener('click', function() {
     futureActOverlay.classList.remove('hide');
@@ -81,8 +82,10 @@ datepicker.addEventListener('change', async function() {
 // Submit future activity form
 futureActSubmitBtn.addEventListener('click', function() {
     // Activity Data to Send to Server
+    let futureDatepicker = document.getElementById('futureAct-date');
+
     let data = {
-        date: document.getElementById('futureAct-date').value,
+        date: (new Date(futureDatepicker.value.replace(/-/g,'/'))).getTime(),
         activity: document.getElementById('futureAct-activity').value.toLowerCase(),
         postDate: (new Date()).getTime()
     }
@@ -284,10 +287,10 @@ async function getAllEntries() {
 
 // Checks if future form is valid
 function futureActIsValid(data) {
-    let date = new Date(data.date.replace('-','/'))
-    if ( date != "Invalid Date" && date < newUTCDate()) {
-      return false
-    }
+    // let date = new Date(data.date.replace('-','/'))
+    // if ( date != "Invalid Date" && date < newUTCDate()) {
+    //   return false
+    // }
   
     return !(data.date == "" || data.activity == "")
 }
