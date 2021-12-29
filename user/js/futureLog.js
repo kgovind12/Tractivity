@@ -217,7 +217,7 @@ function updateRows(entry, container) {
     let deleteOption = document.createElement('p');
     deleteOption.className = 'reminder-option removeFutureAct';
     deleteOption.id = `${entry.postDate}`;
-    deleteOption.textContent = 'Remove';
+    deleteOption.innerHTML = '<i class="fas fa-trash-alt"></i>';
     goalDiv.appendChild(deleteOption);
     container.appendChild(goalDiv);
 }

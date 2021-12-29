@@ -236,7 +236,7 @@ function updateTable(entry, table) {
         let activityCol = document.createElement('td');
         activityCol.textContent = `${capitalize(entry.activity)} for ${entry.amount} ${entry.units}`;
         let deleteCol = document.createElement('td');
-        deleteCol.textContent = 'Remove';
+        deleteCol.innerHTML = '<i class="fas fa-trash-alt"></i>';
         deleteCol.className = 'reminder-option removePastAct';
         deleteCol.id = `${entry.postDate}`;
         row.appendChild(dateCol);
