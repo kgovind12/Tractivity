@@ -272,6 +272,8 @@ function handleDeletion(container) {
                 .then(data => {
                     console.log('Past Activity Deleted Successfully:', data);
                     showToast('Activity Deleted!');
+
+                    // Update table - remove deleted entry
                     if (container.contains(deletedRow)) {
                         container.removeChild(deletedRow);
                     } 
@@ -314,7 +316,7 @@ async function getEntriesByDate(date) {
     return response.json()
 }
 
-// Fetch all entries from the database
+// Fetch all past entries from the database
 async function getAllEntries() {
     let response = await fetch('/allpast', {
         method: 'GET',

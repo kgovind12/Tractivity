@@ -26,11 +26,14 @@ today = yyyy + '-' + mm + '-' + dd;
 document.getElementById("futureDateFilter").setAttribute("min", today);
 document.getElementById('futureAct-date').setAttribute("min", today);
 
+
+// Open future activity overlay when add is clicked
 addFutureActBtn.addEventListener('click', function() {
     futureActOverlay.classList.remove('hide');
     futureOverlayBackground.classList.remove('hide');
 });
 
+// Close overlay when close btn is clicked
 document.getElementById('future-close').addEventListener('click', function() {
     futureActOverlay.classList.add('hide');
     futureOverlayBackground.classList.add('hide');
@@ -51,12 +54,14 @@ datepicker.addEventListener('change', async function() {
     let selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
     let entries = await getEntriesByDate(selectedDate);
 
+    // Show/hide the none found text based on whether any entries are found
     if (entries.length == 0) {
         document.getElementById('future-none-found').classList.remove('hide');
     } else {
         document.getElementById('future-none-found').classList.add('hide');
     }
 
+    // First clear the container rows
     let futureContainer = document.getElementById('future-activities');
     while (futureContainer.children.length > 2) {
         futureContainer.removeChild(futureContainer.lastChild);
@@ -66,6 +71,9 @@ datepicker.addEventListener('change', async function() {
         document.getElementById('future-none-found').classList.remove('hide');
     }
     
+    // If datepicker has a value, update table with that value
+    // Show only the entries whose date matches the selected date
+    // Else, show all the entries
     if (datepicker.value) {
         for (let entry of entries) {
             if (entry.date == formatDate(selectedDate)) {
@@ -73,7 +81,9 @@ datepicker.addEventListener('change', async function() {
             }
         }
     } else {
-        updateRows(entry, futureContainer);
+        for (let entry of entries) {
+            updateRows(entry, futureContainer);
+        }
     }
 
     handleDeletion(futureContainer);
@@ -84,6 +94,7 @@ futureActSubmitBtn.addEventListener('click', function() {
     // Activity Data to Send to Server
     let futureDatepicker = document.getElementById('futureAct-date');
 
+    // Date is converted into SQL integer before posting to db
     let data = {
         date: (new Date(futureDatepicker.value.replace(/-/g,'/'))).getTime(),
         activity: document.getElementById('futureAct-activity').value.toLowerCase(),
@@ -95,6 +106,7 @@ futureActSubmitBtn.addEventListener('click', function() {
         return;
     }
 
+    // Hide the overlay
     futureActOverlay.classList.add('hide');
     futureOverlayBackground.classList.add('hide');
 
@@ -140,6 +152,8 @@ async function createRows() {
     let datepicker = document.getElementById('futureDateFilter');
     let selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
 
+    // If datepicker has a value, show only the entries whose date matches the selected date
+    // Else, show all the entries
     if (datepicker.value) {
         for (let entry of entries) {
             if (entry.date == formatDate(selectedDate)) {
@@ -161,7 +175,7 @@ async function createRows() {
 }
 
 
-// Add a new row
+// Add a new row in the container
 async function addRow() {
     console.log("adding row");
     document.getElementById('future-no-entries').classList.add('hide');
@@ -170,6 +184,10 @@ async function addRow() {
 
     let datepicker = document.getElementById('futureDateFilter');
     let selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
+
+    // If datepicker has a value: 
+    // show the most recent entry from the db only if its date matches the selected date
+    // Else, show the most recent entry from the db
     if (datepicker.value) {
         if (entry.date == formatDate(selectedDate)) {
             document.getElementById('future-none-found').classList.add('hide');
@@ -190,7 +208,6 @@ async function addRow() {
 // Function to update the rows in the container
 function updateRows(entry, container) {
     console.log("updating rows");
-    // First checking if it is a future plan
     let goalDiv = document.createElement('div');
     goalDiv.className = 'goal';
     let description = document.createElement('p');
@@ -204,6 +221,7 @@ function updateRows(entry, container) {
     container.appendChild(goalDiv);
 }
 
+// Function to handle deleting an item from the container
 function handleDeletion(container) {
     const removeBtns = document.querySelectorAll('.removeFutureAct');
 
@@ -229,6 +247,8 @@ function handleDeletion(container) {
                 .then(response => response.json())
                 .then(data => {
                     console.log('Future Activity Deleted Successfully:', data);
+
+                    // Remove the deleted entry's row from the container
                     if (container.contains(deletedNode)) {
                         container.removeChild(deletedNode);
                     } 
@@ -273,7 +293,7 @@ async function getEntriesByDate(date) {
     return response.json()
 }
 
-// Fetch all entries from the database
+// Fetch all future entries from the database
 async function getAllEntries() {
     let response = await fetch('/allfuture', {
         method: 'GET',

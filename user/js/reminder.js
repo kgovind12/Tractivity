@@ -42,17 +42,17 @@ document.getElementById('dismiss').addEventListener('click', function() {
     document.getElementById('reminder-card').classList.add('hide');
 });
 
-
-/* Set default date in forms to current date */
+// Set default date for datepicker as current date
 document.getElementById('viewProgress-date').valueAsDate = newUTCDate();
 
 //defaults
 renderBarChart();
 
+// Update the bar chart every time the form values are changed
 document.getElementById('view-activity-this-week-dropdown').addEventListener('change', renderBarChart);
 document.getElementById('viewProgress-date').addEventListener('change', renderBarChart);
 
-// Render first chart
+// Render bar chart
 async function renderBarChart() {
     let searchParams = {
         activity: document.getElementById('view-activity-this-week-dropdown').value.toLowerCase(),
@@ -63,11 +63,11 @@ async function renderBarChart() {
         )).getTime()
     }
 
-    /* Determine Y-Axis Label */
+    // Determine Y-Axis Label
     let unit = unitMap[searchParams.activity] || 'none'
     let action = actionMap[searchParams.activity] || 'none'
     
-    /* Fetch Activity Data for Week leading up to selected date */
+    // Fetch Activity Data for Week leading up to selected date
     let dataOneWeek = await getDataForOneWeek(searchParams.date, searchParams.activity)
     if (searchParams.date + 0 * 86400000  <= newUTCDate().getTime()) {
         barchart.render(dataOneWeek, `${unit} ${action}`, 'Day of the Week');
@@ -75,7 +75,6 @@ async function renderBarChart() {
         alert('Date is too recent')
     }
 }
-
 
 // Fetch data for one week
 async function getDataForOneWeek(date, activity = null) {
@@ -85,7 +84,7 @@ async function getDataForOneWeek(date, activity = null) {
         endpoint += `&activity=${activity}`
     }
 
-    /* Get Activity Reminder from Server */
+    // Get Activity Reminder from Server
     let response = await fetch(endpoint, {
         method: 'GET',
         headers: {
@@ -96,7 +95,7 @@ async function getDataForOneWeek(date, activity = null) {
     return response.json();
 }
 
-// Fetch all data
+// Fetch all future data
 async function getAllData() {
     let response = await fetch('/allfuture', {
         method: 'GET',
