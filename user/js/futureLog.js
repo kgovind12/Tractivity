@@ -8,6 +8,23 @@ let futureActSubmitBtn = document.getElementById('submitFutureActivity');
 // Set inital date as today's date
 document.getElementById('futureAct-date').valueAsDate = newUTCDate();
 
+// Set min date as today's date
+let today = new Date();
+let dd = today.getDate();
+let mm = today.getMonth() + 1;
+let yyyy = today.getFullYear();
+
+if (dd < 10) {
+   dd = '0' + dd;
+}
+
+if (mm < 10) {
+   mm = '0' + mm;
+} 
+    
+today = yyyy + '-' + mm + '-' + dd;
+document.getElementById("futureDateFilter").setAttribute("min", today);
+
 addFutureActBtn.addEventListener('click', function() {
     futureActOverlay.classList.remove('hide');
     futureOverlayBackground.classList.remove('hide');

@@ -76,30 +76,6 @@ async function renderBarChart() {
     }
 }
 
-async function renderLineGraph() {
-    let searchParams = {
-        activity: document.getElementById('view-activity-dropdown'),
-        date: (new Date(
-            document.getElementById('viewProgress-date')
-                .value
-                .replace('-','/')
-        )).getTime()
-    }
-
-    /* Determine Y-Axis Label */
-    let unit = unitMap[searchParams.activity] || 'none'
-    let action = actionMap[searchParams.activity] || 'none'
-    
-    /* Fetch Activity Data for Week leading up to selected date */
-    let data = await getAllData(searchParams.date, searchParams.activity)
-    if (searchParams.date + 0 * 86400000  <= newUTCDate().getTime()) {
-        // TODO: RENDER LINE GRAPH HERE
-        // barchart.render(data, `${unit} ${action}`, 'Day of the Week');
-    } else {
-        alert('Date is too recent in line graph')
-    }
-}
-
 
 // Fetch data for one week
 async function getDataForOneWeek(date, activity = null) {

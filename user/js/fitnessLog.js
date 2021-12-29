@@ -10,7 +10,23 @@ let pastActDropdown = document.getElementById('pastAct-activity');
 
 /* Set default date in forms to current date */
 document.getElementById('pastAct-date').valueAsDate = newUTCDate()
-// document.getElementById('fAct-date').valueAsDate = newUTCDate()
+
+// Set min date as today's date
+let today = new Date();
+let dd = today.getDate();
+let mm = today.getMonth() + 1;
+let yyyy = today.getFullYear();
+
+if (dd < 10) {
+   dd = '0' + dd;
+}
+
+if (mm < 10) {
+   mm = '0' + mm;
+} 
+    
+today = yyyy + '-' + mm + '-' + dd;
+document.getElementById("pastDateFilter").setAttribute("max", today);
 
 addPastActBtn.addEventListener("click", function() {
     pastActOverlay.classList.remove('hide');
