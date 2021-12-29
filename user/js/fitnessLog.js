@@ -12,6 +12,7 @@ let pastActDropdown = document.getElementById('pastAct-activity');
 document.getElementById('pastAct-date').valueAsDate = newUTCDate()
 
 // Set max date as today's date
+// From https://stackoverflow.com/questions/32378590/set-date-input-fields-max-date-to-today
 let today = new Date();
 let dd = today.getDate();
 let mm = today.getMonth() + 1;
