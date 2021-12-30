@@ -10,7 +10,8 @@ body {
     font-family: 'Readex Pro', sans-serif;
     background-color: white;
     min-width: 350px;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     height: 100vh;
     font-weight: 300;
 }
@@ -58,8 +59,9 @@ main {
     padding: 40px;
     padding-top: 60px;
     width: calc(100vw - 420px);
-    height: 100%;
-    overflow: hidden;
+    height: 87%;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 h1 {
@@ -264,6 +266,17 @@ p#future-no-entries, p#future-none-found {
     padding-top: 2rem;
 }
 
+/* Footer */
+.footer {
+    position: absolute;
+    bottom: 0;
+    height: 40px;
+    border-top: 1px solid var(--light-gray);
+    padding: 1.5rem 2rem;
+    color: rgb(114, 114, 114);
+    font-size: 0.8em;
+    margin-left: -40px;
+}
 
 /* Toast */
 /* Adapted from https://www.w3schools.com/howto/howto_js_snackbar.asp */
