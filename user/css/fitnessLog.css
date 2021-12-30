@@ -59,9 +59,14 @@ main {
     padding: 40px;
     padding-top: 60px;
     width: calc(100vw - 420px);
-    height: 87%;
     overflow-x: hidden;
     overflow-y: auto;
+    min-height: calc(100% - 100px);
+}
+
+.content {
+    min-height: 100%;
+    margin-bottom: 100px;
 }
 
 h1 {
@@ -276,6 +281,8 @@ p#future-no-entries, p#future-none-found {
     color: rgb(114, 114, 114);
     font-size: 0.8em;
     margin-left: -40px;
+    background-color: white;
+    width: 100%;
 }
 
 /* Toast */

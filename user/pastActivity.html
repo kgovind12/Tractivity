@@ -18,40 +18,44 @@
 </head>
 <body onload="createTableRows()">
     <div id="sidenav" class="sidenav">
-        <div class="logocontainer">
-            <img class="logo" src="./images/tractivity-logo-white.png" alt="Tractivity logo">
+        <div class="sidenav-main">
+            <div class="logocontainer">
+                <img class="logo" src="./images/tractivity-logo-white.png" alt="Tractivity logo">
+            </div>
+            <a class="dashboard" href="index">Dashboard</a>
+            <a class="active" href="#">Past Activities</a>
+            <a href="futurePlans.html">Future plans</a>
+            <hr>
+            <h4 class="subhead">Account</h4>
+            <a href="logout" id="signout">Sign out</a>
         </div>
-        <a class="dashboard" href="index">Dashboard</a>
-        <a class="active" href="#">Past Activities</a>
-        <a href="futurePlans.html">Future plans</a>
-        <hr>
-        <h4 class="subhead">Account</h4>
-        <a href="logout" id="signout">Sign out</a>
     </div>
     <main>
-        <h1>Past Activities</h1>
+        <div class="content">
+            <h1>Past Activities</h1>
 
-        <div class="datepicker">
-            <label>
-                Filter by date:
-                <input type="date" id="pastDateFilter">
-            </label>
+            <div class="datepicker">
+                <label>
+                    Filter by date:
+                    <input type="date" id="pastDateFilter">
+                </label>
+            </div>
+
+            <div class="tablecontainer">
+                <table id="activities" class="table"> 
+                    <tr>
+                        <th class="date">Date</th>
+                        <th class="activity">Activity</th>
+                        <th class="delete"></th>
+                    </tr>
+                </table>
+            </div>
+
+            <p id="none-found" class="hide">There are no entries found for that date. Try another date!</p>
+            <p id="no-entries">There are no entries to show. Log a workout to begin your fitness journey!</p>
+
+            <button id="addPastActivity" class="btn">Add Activity</button>
         </div>
-
-        <div class="tablecontainer">
-            <table id="activities" class="table"> 
-                <tr>
-                    <th class="date">Date</th>
-                    <th class="activity">Activity</th>
-                    <th class="delete"></th>
-                </tr>
-            </table>
-        </div>
-
-        <p id="none-found" class="hide">There are no entries found for that date. Try another date!</p>
-        <p id="no-entries">There are no entries to show. Log a workout to begin your fitness journey!</p>
-
-        <button id="addPastActivity" class="btn">Add Activity</button>
 
         <div class="footer">
             <p>@2021. Krithika Govind, Mandeepika Saini and Keya Barve</p>

@@ -32,36 +32,38 @@
         <a href="logout" id="signout">Sign out</a>
     </div>
     <main>
-        <h1>Welcome, <span id="username"></span>!</h1>
-        <div id="reminder-card" class="reminder-card hide">
-            <h3><span id="bold">Reminder: &nbsp;</span><span id="reminder"></span></h3>
-            <div id="reminder-option-wrapper">
-                <div id="dismiss" class="reminder-option">Dismiss</div>
-            </div>
-        </div>
-        <!-- <h2>This Week:</h2> -->
-        <div id="this-week-progress-form" class="progress-form">
-            <label>
-                View Activity for:
-                <div class="dropdown">
-                    <select name="view-activities" id="view-activity-this-week-dropdown">
-                        <option value="Walk">Walk</option>
-                        <option value="Run">Run</option>
-                        <option value="Swim">Swim</option>
-                        <option value="Bike">Bike</option>
-                        <option value="Yoga">Yoga</option>
-                        <option value="Soccer">Soccer</option>
-                        <option value="Basketball">Basketball</option>
-                    </select>  
+        <div class="content">
+            <h1>Welcome, <span id="username"></span>!</h1>
+            <div id="reminder-card" class="reminder-card hide">
+                <h3><span id="bold">Reminder: &nbsp;</span><span id="reminder"></span></h3>
+                <div id="reminder-option-wrapper">
+                    <div id="dismiss" class="reminder-option">Dismiss</div>
                 </div>
-            </label>
-            <label>
-                For week ending:
-                <input type="date" id="viewProgress-date"/>
-            </label>
-        </div>
-        <div id="barchart-wrapper">
-            <div id='chart-anchor'></div>
+            </div>
+            <!-- <h2>This Week:</h2> -->
+            <div id="this-week-progress-form" class="progress-form">
+                <label>
+                    View Activity for:
+                    <div class="dropdown">
+                        <select name="view-activities" id="view-activity-this-week-dropdown">
+                            <option value="Walk">Walk</option>
+                            <option value="Run">Run</option>
+                            <option value="Swim">Swim</option>
+                            <option value="Bike">Bike</option>
+                            <option value="Yoga">Yoga</option>
+                            <option value="Soccer">Soccer</option>
+                            <option value="Basketball">Basketball</option>
+                        </select>  
+                    </div>
+                </label>
+                <label>
+                    For week ending:
+                    <input type="date" id="viewProgress-date"/>
+                </label>
+            </div>
+            <div id="barchart-wrapper">
+                <div id='chart-anchor'></div>
+            </div>
         </div>
 
         <div class="footer">
