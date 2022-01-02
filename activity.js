@@ -37,14 +37,14 @@ function Activity(obj) {
             postDate: obj.postDate,
             difficulty: obj.difficulty
         }
-    } else if (obj.date && obj.activity && obj.postDate && obj.difficulty) {
+    } else if (obj.date && obj.activity && obj.postDate) {
         activity = {
             date: obj.date,
             activity: obj.activity,
             scalar: -1,
             units: -1,
             postDate: obj.postDate,
-            difficulty: obj.difficulty
+            difficulty: -1
         }
     }
 
