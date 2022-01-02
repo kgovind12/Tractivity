@@ -31,15 +31,15 @@ const db = require('./sqlWrap');
 const act = require('./activity');
 
 // SQL commands for ActivityTable
-const insertDB = "insert into ActivityTable (activity, date, amount, units, postDate, userid) values (?,?,?,?,?,?)"
+const insertDB = "insert into ActivityTable (activity, date, amount, units, postDate, difficulty, userid) values (?,?,?,?,?,?,?)"
 const getOneDB = "select * from ActivityTable where activity = ? and date = ?";
 // const allDB = "select * from ActivityTable where activity = ?";
 const getPastActivityByDate = "SELECT * FROM ActivityTable WHERE amount != -1 AND units != -1 AND date = ? AND userid = ?";
 const getFutureActivityByDate = "SELECT * FROM ActivityTable WHERE amount = -1 AND units = -1 AND date = ? AND userid = ?";
 const deletePrevPlannedDB = "DELETE FROM ActivityTable WHERE amount < 0 and date BETWEEN ? and ? and userid = ?";
-const getMostRecentPrevPlannedDB = "SELECT rowIdNum, activity, MAX(date), amount, postDate, userid FROM ActivityTable WHERE amount <= 0 and date BETWEEN ? and ? and userid = ?";
-const getMostRecentPastDB = "SELECT MAX(rowIdNum), activity, date, amount, units, postDate, userid FROM ActivityTable WHERE amount != -1 AND units != -1 AND userid = ?";
-const getMostRecentFutureDB = "SELECT MAX(rowIdNum), activity, date, amount, units, postDate, userid FROM ActivityTable WHERE amount = -1 AND units = -1 AND userid = ?";
+const getMostRecentPrevPlannedDB = "SELECT rowIdNum, activity, MAX(date), amount, postDate, difficulty, userid FROM ActivityTable WHERE amount <= 0 and date BETWEEN ? and ? and userid = ?";
+const getMostRecentPastDB = "SELECT MAX(rowIdNum), activity, date, amount, units, postDate, difficulty, userid FROM ActivityTable WHERE amount != -1 AND units != -1 AND userid = ?";
+const getMostRecentFutureDB = "SELECT MAX(rowIdNum), activity, date, amount, units, postDate, difficulty, userid FROM ActivityTable WHERE amount = -1 AND units = -1 AND userid = ?";
 const getPastWeekByActivityDB = "SELECT * FROM ActivityTable WHERE activity = ? and userid = ? and date BETWEEN ? and ? ORDER BY date ASC";
 const geteverything = "select * from ActivityTable";
 const getAllPastEntries = "select * from ActivityTable where amount != -1 and units != -1 and userid = ?";
