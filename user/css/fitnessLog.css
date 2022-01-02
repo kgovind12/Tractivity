@@ -271,6 +271,16 @@ p#future-no-entries, p#future-none-found {
     padding-top: 2rem;
 }
 
+
+/* Difficulty level colors */
+.green { color: #00bb00 }
+.yellow { color: #ffcc00 }
+.red { color: #ff0000 }
+
+.difficulty {
+    cursor: pointer;
+}
+
 /* Footer */
 .footer {
     position: absolute;
@@ -284,6 +294,8 @@ p#future-no-entries, p#future-none-found {
     background-color: white;
     width: 100%;
 }
+
+
 
 /* Toast */
 /* Adapted from https://www.w3schools.com/howto/howto_js_snackbar.asp */

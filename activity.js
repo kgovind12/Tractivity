@@ -28,21 +28,23 @@ function Activity(obj) {
         obj.date = (new Date(obj.date.replace('-','/'))).getTime()
     }
 
-    if (obj.date && obj.activity && obj.scalar && obj.units) {
+    if (obj.date && obj.activity && obj.scalar && obj.units && obj.postDate && obj.difficulty) {
         activity = {
             date: obj.date,
             activity: obj.activity,
             scalar: obj.scalar,
             units: obj.units,
-            postDate: obj.postDate
+            postDate: obj.postDate,
+            difficulty: obj.difficulty
         }
-    } else if (obj.date && obj.activity && obj.postDate) {
+    } else if (obj.date && obj.activity && obj.postDate && obj.difficulty) {
         activity = {
             date: obj.date,
             activity: obj.activity,
             scalar: -1,
             units: -1,
-            postDate: obj.postDate
+            postDate: obj.postDate,
+            difficulty: obj.difficulty
         }
     }
 
@@ -75,5 +77,5 @@ function ActivityToList(activity, useridProfile) {
         throw new ActivityFormatException(activity)
     }
 
-    return [activity.activity, activity.date, activity.scalar, activity.units, activity.postDate, useridProfile]
+    return [activity.activity, activity.date, activity.scalar, activity.units, activity.postDate, activity.difficulty, useridProfile]
 }

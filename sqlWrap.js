@@ -39,7 +39,7 @@ function deleteActivityTable() {
 function createActivityTable() {
   // explicitly declaring the rowIdNum protects rowids from changing if the 
   // table is compacted; not an issue here, but good practice
-  const cmd = 'CREATE TABLE ActivityTable (rowIdNum INTEGER PRIMARY KEY, activity TEXT, date INTEGER, amount FLOAT, units TEXT, postDate INTEGER, userid TEXT)';
+  const cmd = 'CREATE TABLE ActivityTable (rowIdNum INTEGER PRIMARY KEY, activity TEXT, date INTEGER, amount FLOAT, units TEXT, postDate INTEGER, difficulty TEXT, userid TEXT)';
   db.run(cmd, function(err, val) {
     if (err) {
       console.log("Database creation failure",err.message);

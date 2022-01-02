@@ -1,6 +1,45 @@
 'use strict'
 
-/* Show add past activity overlay */
+// Activity to difficulty level map
+let difficultyMap = {
+    walk: {
+        "easy": 1,
+        "hard": 2
+    },
+    run: {
+        "easy": 0.5,
+        "hard": 2
+    },
+    swim: {
+        "easy": 5,
+        "hard": 15
+    },
+    bike: {
+        "easy": 3,
+        "hard": 6
+    },
+    yoga: {
+        "easy": 30,
+        "hard": 60
+    },
+    soccer: {
+        "easy": 30,
+        "hard": 60
+    },
+    basketball: {
+        "easy": 30,
+        "hard": 60
+    },
+}
+
+// Difficulty level to color map
+var difficultyColorMap = {
+    "easy": "green",
+    "medium": "yellow",
+    "hard": "red"
+}
+
+// Variables
 let addPastActBtn = document.getElementById("addPastActivity");
 let pastActOverlay = document.getElementById('pastAct-overlay');
 let overlayBackground = document.getElementById('overlay-bg');
@@ -114,12 +153,16 @@ pastActDropdown.addEventListener('change', function() {
 pastActSubmitBtn.addEventListener('click', function() {
     let pastDatepicker = document.getElementById('pastAct-date');
     // Activity Data to Send to Server
+    let activity = document.getElementById('pastAct-activity').value.toLowerCase();
+    let scalar = parseFloat(document.getElementById('pastAct-scalar').value);
+
     let data = {
         date: (new Date(pastDatepicker.value.replace(/-/g,'/'))).getTime(),
         activity: document.getElementById('pastAct-activity').value.toLowerCase(),
         scalar: parseFloat(document.getElementById('pastAct-scalar').value),
         units: document.getElementById('pastAct-unit').value,
-        postDate: (new Date()).getTime()
+        postDate: (new Date()).getTime(),
+        difficulty: calculateDifficulty(activity, scalar)
     }
 
     if (!isValid(data)) {  
@@ -160,6 +203,24 @@ pastActSubmitBtn.addEventListener('click', function() {
     document.getElementById('pastAct-scalar').value = "";
     document.getElementById('pastAct-unit').value = "km";
 });
+
+// Given the type of activity and the number of units completed, determine the difficulty level
+function calculateDifficulty(activity, scalar) {
+    let activityMap = difficultyMap[activity];
+    let difficulty = "";
+
+    if (scalar <= activityMap[Object.keys(activityMap)[0]]) {
+        difficulty = "easy";
+    } else if (scalar >= activityMap[Object.keys(activityMap)[1]]) {
+        difficulty = "hard";
+    } else {
+        difficulty = "medium";
+    }
+
+    console.log("difficulty = ", difficulty);
+
+    return difficulty;
+}
 
 // Function to display the table initally on page load
 async function createTableRows() {
@@ -233,15 +294,24 @@ function updateTable(entry, table) {
         let row = document.createElement('tr');
         let dateCol = document.createElement('td');
         dateCol.textContent = entry.date;
+
         let activityCol = document.createElement('td');
         activityCol.textContent = `${capitalize(entry.activity)} for ${entry.amount} ${entry.units}`;
+
+        let difficultyCol = document.createElement('td');
+        difficultyCol.innerHTML = '<i class="fas fa-circle"></i>';
+        difficultyCol.className = `difficulty ${difficultyColorMap[entry.difficulty]}`;
+
         let deleteCol = document.createElement('td');
         deleteCol.innerHTML = '<i class="fas fa-trash-alt"></i>';
         deleteCol.className = 'reminder-option removePastAct';
         deleteCol.id = `${entry.postDate}`;
+
         row.appendChild(dateCol);
         row.appendChild(activityCol);
+        row.appendChild(difficultyCol);
         row.appendChild(deleteCol);
+        
         table.appendChild(row);
     }
 }
