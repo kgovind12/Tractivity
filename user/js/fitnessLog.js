@@ -299,7 +299,7 @@ function updateTable(entry, table) {
         activityCol.textContent = `${capitalize(entry.activity)} for ${entry.amount} ${entry.units}`;
 
         let difficultyCol = document.createElement('td');
-        difficultyCol.innerHTML = '<i class="fas fa-circle"></i>';
+        difficultyCol.innerHTML = `<i class="fas fa-circle tooltip"><span class="tooltiptext">${entry.difficulty}</span></i>`;
         difficultyCol.className = `difficulty ${difficultyColorMap[entry.difficulty]}`;
 
         let deleteCol = document.createElement('td');
@@ -311,7 +311,7 @@ function updateTable(entry, table) {
         row.appendChild(activityCol);
         row.appendChild(difficultyCol);
         row.appendChild(deleteCol);
-        
+
         table.appendChild(row);
     }
 }
