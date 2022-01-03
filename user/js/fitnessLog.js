@@ -87,6 +87,17 @@ let datepicker = document.getElementById('pastDateFilter');
 let difficultyFilter = document.getElementById('pastDifficultyFilter');
 
 pastFilterSearch.addEventListener('click', async function() {
+    // Clear the table's current rows
+    let table = document.getElementById('activities');
+    while (table.children.length > 1) {
+        table.removeChild(table.lastChild);
+    }
+
+    if (table.childNodes.length == 1) {
+        document.getElementById('none-found').classList.remove('hide');
+        document.getElementById('no-entries').classList.add('hide');
+    }
+
     let selectedDate = "";
 
     if (datepicker.value) {
@@ -106,16 +117,6 @@ pastFilterSearch.addEventListener('click', async function() {
         document.getElementById('none-found').classList.remove('hide');
     } else {
         document.getElementById('none-found').classList.add('hide');
-    }
-
-    // Clear the table's current rows
-    let table = document.getElementById('activities');
-    while (table.children.length > 1) {
-        table.removeChild(table.lastChild);
-    }
-
-    if (table.childNodes.length == 1) {
-        document.getElementById('none-found').classList.remove('hide');
     }
 
     for (let entry of entries) {
@@ -169,9 +170,6 @@ pastActSubmitBtn.addEventListener('click', function() {
     pastActOverlay.classList.add('hide');
     overlayBackground.classList.add('hide');
 
-    // Add an entry in the table
-    addEntry();
-
     console.log('Past Activity Sending:', data);
 
     // Post activity data to server
@@ -191,6 +189,9 @@ pastActSubmitBtn.addEventListener('click', function() {
         console.error('Past Activity Error:', error);
         showToast('Error adding activity.');
     });
+
+    // Add an entry in the table
+    addEntry();
 
     // Reset form
     document.getElementById('pastAct-date').valueAsDate = newUTCDate();
@@ -258,11 +259,14 @@ async function addEntry() {
             document.getElementById('none-found').classList.add('hide');
             updateTable(entry, table);
         }
-    } else { // if only difficulty is selected
+    } else if (difficultyFilter.value) { // if only difficulty is selected
+        let selectedDifficulty = difficultyFilter.value;
         if (entry.difficulty == selectedDifficulty) {
             document.getElementById('none-found').classList.add('hide');
             updateTable(entry, table);
         }
+    } else { // else, just update the table with the latest entry
+        updateTable(entry, table);
     }
 
     // Check if table is empty, then display the 'none found' text
@@ -335,7 +339,14 @@ function handleDeletion(container) {
                         container.removeChild(deletedRow);
                     } 
                     if (container.children.length == 1) {
-                        document.getElementById('no-entries').classList.remove('hide');
+                        if (datepicker.value || difficultyFilter.value) {
+                            document.getElementById('none-found').classList.remove('hide');
+                            document.getElementById('no-entries').classList.add('hide');
+                        } else {
+                            document.getElementById('no-entries').classList.remove('hide');
+                            document.getElementById('none-found').classList.add('hide');
+                        }
+                        
                     }
                 })
                 .catch((error) => {

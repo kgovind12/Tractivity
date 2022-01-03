@@ -251,18 +251,18 @@ select {
     transform: translate(-50%, -50%);
 }
 
-/* Past activity filters */
-.pastAct-filters {
+/* Past and future activity filters */
+.filters {
     display: flex;
     align-items: flex-end;
 }
 
-.pastAct-filters label {
+.filters label {
     margin-top: 2rem;
     width: 30%;
 }
 
-.pastAct-filters label:not(:last-child) {
+.filters label:not(:last-child) {
     margin-right: 3rem;
 }
 
