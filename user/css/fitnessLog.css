@@ -119,7 +119,7 @@ h2 {
 }
 
 /* Filter search button */
-.btn#pastFilters-search {
+.btn#pastFilters-search, .btn#futureFilters-search {
     height: 41px;
     width: 15%;
     max-width: 120px;

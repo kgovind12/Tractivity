@@ -4,6 +4,7 @@ let addFutureActBtn = document.getElementById('addFutureActivity');
 let futureActOverlay = document.getElementById('futureAct-overlay');
 let futureOverlayBackground = document.getElementById('future-overlay-bg');
 let futureActSubmitBtn = document.getElementById('submitFutureActivity');
+let futureFiltersSearch = document.getElementById('futureFilters-search');
 
 // Set inital date as today's date
 document.getElementById('futureAct-date').valueAsDate = newUTCDate();
@@ -43,7 +44,7 @@ document.getElementById('future-close').addEventListener('click', function() {
 
 // On change date picker
 let datepicker = document.getElementById('futureDateFilter');
-datepicker.addEventListener('change', async function() {
+futureFiltersSearch.addEventListener('click', async function() {
     // First clear the container rows
     let futureContainer = document.getElementById('future-activities');
     while (futureContainer.children.length > 2) {
