@@ -226,16 +226,26 @@ app.get('/recentfuture', isAuthenticated, async function(req, res) {
     res.send(result);
 });
 
-app.get('/bydatepast', isAuthenticated, async function(req, res) {
+app.get('/filteredpast', isAuthenticated, async function(req, res) {
     console.log("Server is getting entries by date");
+
     let userIdProfile = req.user.useridData;
     let date = parseInt(req.query.date);
+    let difficulty = req.query.difficulty;
+    let results = [];
 
-    // console.log("date in server = ", date);
-    // console.log("user id in server = ", userIdProfile);
-    let results = await dbo.get_past_entries_by_date(date, userIdProfile);
+    console.log("date in server = ", date);
+    console.log("difficulty in server = ", difficulty);
 
-    if (results) {
+    if (difficulty && !date) {
+        results = await dbo.get_past_entries_by_difficulty(difficulty, userIdProfile);
+    } else if (date && !difficulty) {
+        results = await dbo.get_past_entries_by_date(date, userIdProfile);
+    } else {
+        results = await dbo.get_filtered_past_entries(date, difficulty, userIdProfile);
+    }
+
+    if (results.length > 0) {
         for (let result of results) {
             result.date = formatDate(result.date);
         }

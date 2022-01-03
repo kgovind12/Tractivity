@@ -46,6 +46,7 @@ let overlayBackground = document.getElementById('overlay-bg');
 
 let pastActSubmitBtn = document.getElementById('submitPastActivity');
 let pastActDropdown = document.getElementById('pastAct-activity');
+let pastFilterSearch = document.getElementById('pastFilters-search');
 
 /* Set default date in forms to current date */
 document.getElementById('pastAct-date').valueAsDate = newUTCDate()
@@ -81,19 +82,24 @@ document.getElementById('close').addEventListener('click', function() {
     overlayBackground.classList.add('hide');
 });
 
-// On change date picker
+// When search button is clicked
 let datepicker = document.getElementById('pastDateFilter');
-datepicker.addEventListener('change', async function() {
-    if (!datepicker.value) { // if datepicker is cleared
+let difficultyFilter = document.getElementById('pastDifficultyFilter');
+
+pastFilterSearch.addEventListener('click', async function() {
+    let selectedDate = "";
+
+    if (datepicker.value) {
+        selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
+    }
+    let selectedDifficulty = difficultyFilter.value;
+
+    if (selectedDate == "" && selectedDifficulty == "") {
         createTableRows();
         return;
     }
 
-    // Hide the 'no entries' text
-    document.getElementById('no-entries').classList.add('hide');
-
-    let selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
-    let entries = await getEntriesByDate(selectedDate);
+    let entries = await getFilteredEntries(selectedDate, selectedDifficulty);
 
     // Show/hide none found text
     if (entries.length == 0) {
@@ -111,24 +117,13 @@ datepicker.addEventListener('change', async function() {
     if (table.childNodes.length == 1) {
         document.getElementById('none-found').classList.remove('hide');
     }
-    
-    // If a date is selected, update the table rows according to date
-    // Else, just update the table
-    if (datepicker.value) {
-        for (let entry of entries) {
-            if (entry.date == formatDate(selectedDate)) {
-                updateTable(entry, table);
-            }
-        }
-    } else { 
-        for(let entry of entries) {
-            updateTable(entry, table);
-        }
+
+    for (let entry of entries) {
+        updateTable(entry, table);
     }
 
     handleDeletion(table);
 });
-
 
 pastActDropdown.addEventListener('change', function() {
     let pastActUnit = document.getElementById("pastAct-unit");
@@ -217,8 +212,6 @@ function calculateDifficulty(activity, scalar) {
         difficulty = "medium";
     }
 
-    console.log("difficulty = ", difficulty);
-
     return difficulty;
 }
 
@@ -233,27 +226,8 @@ async function createTableRows() {
         document.getElementById('none-found').classList.add('hide');
     }
 
-    let datepicker = document.getElementById('pastDateFilter');
-    let selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
-
-    // If datepicker is selected, update table according to selected date
-    // Else, just update table
-    if (datepicker.value) {
-        for (let entry of entries) {
-            // Show the entries whose date matches the selected date
-            if (entry.date == formatDate(selectedDate)) {
-                document.getElementById('none-found').classList.add('hide');
-                updateTable(entry, table);
-            } else { // We repeatedly check whether the table is empty
-                if (table.children.length <= 1) {
-                    document.getElementById('none-found').classList.remove('hide');
-                } 
-            }
-        }
-    } else {
-        for (let entry of entries) {
-            updateTable(entry, table);
-        }
+    for (let entry of entries) {
+        updateTable(entry, table);
     }
 
     handleDeletion(table);
@@ -266,22 +240,34 @@ async function addEntry() {
     let table = document.getElementById('activities');
 
     let datepicker = document.getElementById('pastDateFilter');
-    let selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
+    let difficultyFilter = document.getElementById('pastDifficultyFilter');
 
-    if (datepicker.value) {
-        // If the date of the added entry matches the selected date,
-        // display the entry here.
+    // If date and difficulty are both selected
+    if (datepicker.value && difficultyFilter.value != "") {
+        let selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
+        let selectedDifficulty = difficultyFilter.value;
+
+        if (entry.date == formatDate(selectedDate) && entry.difficulty == selectedDifficulty) {
+            document.getElementById('none-found').classList.add('hide');
+            updateTable(entry, table);
+        }
+    } else if (datepicker.value) { // if only date is selected
+        let selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
+
         if (entry.date == formatDate(selectedDate)) {
             document.getElementById('none-found').classList.add('hide');
             updateTable(entry, table);
-        } else {
-            if (table.children.length <= 1) {
-                document.getElementById('none-found').classList.remove('hide');
-            } 
         }
-    } else {
-        document.getElementById('none-found').classList.add('hide');
-        updateTable(entry, table);
+    } else { // if only difficulty is selected
+        if (entry.difficulty == selectedDifficulty) {
+            document.getElementById('none-found').classList.add('hide');
+            updateTable(entry, table);
+        }
+    }
+
+    // Check if table is empty, then display the 'none found' text
+    if (table.children.length <= 1) {
+        document.getElementById('none-found').classList.remove('hide');
     }
     
     handleDeletion(table);
@@ -371,6 +357,20 @@ async function getMostRecentEntry() {
     });
     
     return response.json()
+}
+
+// Fetch entries with selected date and difficulty
+async function getFilteredEntries(date, difficulty) {
+    let endpoint = `/filteredpast?date=${date}&difficulty=${difficulty}`;
+
+    let response = await fetch(endpoint, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    });
+
+    return response.json();
 }
 
 // Fetch entries with specific date from the database
