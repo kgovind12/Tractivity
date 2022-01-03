@@ -4,6 +4,7 @@ let addFutureActBtn = document.getElementById('addFutureActivity');
 let futureActOverlay = document.getElementById('futureAct-overlay');
 let futureOverlayBackground = document.getElementById('future-overlay-bg');
 let futureActSubmitBtn = document.getElementById('submitFutureActivity');
+let futureFiltersSearch = document.getElementById('futureFilters-search');
 
 // Set inital date as today's date
 document.getElementById('futureAct-date').valueAsDate = newUTCDate();
@@ -43,7 +44,17 @@ document.getElementById('future-close').addEventListener('click', function() {
 
 // On change date picker
 let datepicker = document.getElementById('futureDateFilter');
-datepicker.addEventListener('change', async function() {
+futureFiltersSearch.addEventListener('click', async function() {
+    // First clear the container rows
+    let futureContainer = document.getElementById('future-activities');
+    while (futureContainer.children.length > 2) {
+        futureContainer.removeChild(futureContainer.lastChild);
+    }
+
+    if (futureContainer.childNodes.length == 1) {
+        document.getElementById('future-none-found').classList.remove('hide');
+    }
+
     if (!datepicker.value) {
         createRows();
         return;
@@ -60,16 +71,6 @@ datepicker.addEventListener('change', async function() {
         document.getElementById('future-none-found').classList.remove('hide');
     } else {
         document.getElementById('future-none-found').classList.add('hide');
-    }
-
-    // First clear the container rows
-    let futureContainer = document.getElementById('future-activities');
-    while (futureContainer.children.length > 2) {
-        futureContainer.removeChild(futureContainer.lastChild);
-    }
-
-    if (futureContainer.childNodes.length == 1) {
-        document.getElementById('future-none-found').classList.remove('hide');
     }
     
     // If datepicker has a value, update table with that value
@@ -111,9 +112,6 @@ futureActSubmitBtn.addEventListener('click', function() {
     futureActOverlay.classList.add('hide');
     futureOverlayBackground.classList.add('hide');
 
-    // Add an entry in the table
-    addRow();
-
     console.log('Future Activity Sending:', data);
 
     // Post activity data to server
@@ -133,6 +131,9 @@ futureActSubmitBtn.addEventListener('click', function() {
         console.error('Future Activity Error:', error);
         showToast('Error adding activity.')
     });
+
+    // Add an entry in the table
+    addRow();
 
     // Reset form
     document.getElementById('futureAct-date').valueAsDate = newUTCDate();
@@ -254,7 +255,14 @@ function handleDeletion(container) {
                         container.removeChild(deletedNode);
                     } 
                     if (container.children.length == 2) {
-                        document.getElementById('future-no-entries').classList.remove('hide');
+                        if (datepicker.value) {
+                            document.getElementById('future-none-found').classList.remove('hide');
+                            document.getElementById('future-no-entries').classList.add('hide');
+                        } else {
+                            document.getElementById('future-no-entries').classList.remove('hide');
+                            document.getElementById('future-none-found').classList.add('hide');
+                        }
+                        
                     }
                     showToast('Activity deleted!');
                 })

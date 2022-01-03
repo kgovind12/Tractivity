@@ -16,7 +16,9 @@ module.exports = {
   store_profile: store_profile,
   get_profile: get_profile,
   delete_activity: delete_activity,
+  get_filtered_past_entries: get_filtered_past_entries,
   get_past_entries_by_date: get_past_entries_by_date,
+  get_past_entries_by_difficulty: get_past_entries_by_difficulty,
   get_future_entries_by_date: get_future_entries_by_date,
   get_all_past_entries: get_all_past_entries,
   get_all_future_entries: get_all_future_entries,
@@ -35,6 +37,8 @@ const insertDB = "insert into ActivityTable (activity, date, amount, units, post
 const getOneDB = "select * from ActivityTable where activity = ? and date = ?";
 // const allDB = "select * from ActivityTable where activity = ?";
 const getPastActivityByDate = "SELECT * FROM ActivityTable WHERE amount != -1 AND units != -1 AND date = ? AND userid = ?";
+const getPastActivityByDifficulty = "SELECT * FROM ActivityTable WHERE amount != -1 AND units != -1 AND difficulty = ? AND userid = ?";
+const getPastActivityByFilters = "SELECT * FROM ActivityTable WHERE amount != -1 AND units != -1 AND date = ? AND difficulty = ? AND userid = ?";
 const getFutureActivityByDate = "SELECT * FROM ActivityTable WHERE amount = -1 AND units = -1 AND date = ? AND userid = ?";
 const deletePrevPlannedDB = "DELETE FROM ActivityTable WHERE amount < 0 and date BETWEEN ? and ? and userid = ?";
 const getMostRecentPrevPlannedDB = "SELECT rowIdNum, activity, MAX(date), amount, postDate, difficulty, userid FROM ActivityTable WHERE amount <= 0 and date BETWEEN ? and ? and userid = ?";
@@ -261,7 +265,24 @@ async function get_similar_activities_in_range(activityType, min, max, useridPro
 }
 
 /**
- * Get all past activities that have the specified date
+ * Get all past activities that have the specified date and difficulty level
+ * min and max date range
+ * @param {number} date - ms since 1970
+ * @returns {Array.<Activity>} activities with specific date
+ */
+ async function get_filtered_past_entries(date, difficulty, useridProfile) {
+  try {
+    let results = await db.all(getPastActivityByFilters, [date, difficulty, useridProfile]);
+    return results;
+  }
+  catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+/**
+ * Get all past activities only by selected date
  * min and max date range
  * @param {number} date - ms since 1970
  * @returns {Array.<Activity>} activities with specific date
@@ -269,6 +290,23 @@ async function get_similar_activities_in_range(activityType, min, max, useridPro
  async function get_past_entries_by_date(date, useridProfile) {
   try {
     let results = await db.all(getPastActivityByDate, [date, useridProfile]);
+    return results;
+  }
+  catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+/**
+ * Get all past activities only by selected difficulty
+ * min and max date range
+ * @param {number} date - ms since 1970
+ * @returns {Array.<Activity>} activities with specific date
+ */
+ async function get_past_entries_by_difficulty(difficulty, useridProfile) {
+  try {
+    let results = await db.all(getPastActivityByDifficulty, [difficulty, useridProfile]);
     return results;
   }
   catch (error) {

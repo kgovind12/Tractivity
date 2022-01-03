@@ -33,16 +33,18 @@
         <div class="content">
             <h1>Future Plans</h1>
 
-            <div class="datepicker">
+            <div class="filters">
                 <label>
                     Filter by date:
                     <input type="date" id="futureDateFilter">
                 </label>
+
+                <button id="futureFilters-search" class="btn">Search</button>
             </div>
     
             <div class="future-activities" id="future-activities">
                 <p id="future-no-entries">No goals to show. Set a goal today!</p>
-                <p id="future-none-found" class="hide">There are no entries found for that date. Try another date!</p>
+                <p id="future-none-found" class="hide">There are no entries that match your selection. Try another selection!</p>
             </div>
     
             <button id="addFutureActivity" class="btn">Add Goal</button>

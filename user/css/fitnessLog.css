@@ -118,6 +118,13 @@ h2 {
     opacity: 0.8;
 }
 
+/* Filter search button */
+.btn#pastFilters-search, .btn#futureFilters-search {
+    height: 41px;
+    width: 15%;
+    max-width: 120px;
+}
+
 /* Table styles */
 
 .tablecontainer {
@@ -189,6 +196,10 @@ h2 {
     justify-content: space-between;
 }
 
+input, select {
+    cursor: pointer;
+}
+
 #futureAct-form .form {
     justify-content: center;
     width: auto;
@@ -231,6 +242,7 @@ select {
 }
 
 .dropdown::after {
+    pointer-events: none;
     content: "\25be";
     position: absolute;
     color: var(--main-gray);
@@ -239,10 +251,19 @@ select {
     transform: translate(-50%, -50%);
 }
 
-/* Past activity date picker */
-.datepicker {
+/* Past and future activity filters */
+.filters {
+    display: flex;
+    align-items: flex-end;
+}
+
+.filters label {
     margin-top: 2rem;
     width: 30%;
+}
+
+.filters label:not(:last-child) {
+    margin-right: 3rem;
 }
 
 .hide {
