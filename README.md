@@ -31,6 +31,7 @@ Special credits for initial idea, project name, starter code, database creation,
 - UC Davis Professor Nina Amenta 
 - TAs David Bauer, Jia-Wei Liang, Rajat Jalal, Kyle Mitchell, and Vivian Pham
 - Tutors Akshay Nama and Omar Burney.  
+
 This project would not have been possible without their guidance.
 
 ## Contact Me
