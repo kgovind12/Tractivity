@@ -23,7 +23,7 @@ The dashboard will display badges for weekly or monthly achievements, including:
 - Go Getter: This badge will be awarded to those users who have completed at least 10 days of 'medium' level workouts.
 - Fitness Pro: This badge will be awarded to those users who have completed at least 10 days of 'hard' level workouts.
 - Motivation Master: This badge will be awarded to those users who have completed at least 30 days of continuous workouts (any activity) without a break.
-- Other badges will be awarded based on activity (example, walking 10 continuous days, biking for 10 continuous days, etc.).
+- Other badges will be awarded based on activity (for example: walking for 10 continuous days, biking for 10 continuous days, etc.).
 
 ### Nutrition Tracker
 This will be another tab where users can log their daily meals. They will then be shown on what levels of the food pyramid they have fulfilled, and what levels they still need nutrients in. 
