@@ -31,7 +31,7 @@ This will be another tab where users can log their daily meals. They will then b
 
 ## Credits:
 Special credits for initial idea, project name, starter code, database creation, logo design and extra help go to:
-- UC Davis Professor Nina Amenta 
+- Professor Nina Amenta, UC Davis
 - TAs David Bauer, Jia-Wei Liang, Rajat Jalal, Kyle Mitchell, and Vivian Pham
 - Tutors Akshay Nama and Omar Burney.  
 
