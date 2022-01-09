@@ -11,7 +11,7 @@ The dashboard also displays a dismissable reminder for the next activity that th
 Users can log their past activities along with the date, type of activity, and number of units of that activity completed. These will be stored in a database of past entries and displayed on a table under the 'Past Activities' tab. Each activity will be assigned a difficulty level (easy, medium, hard), keeping in mind that this app is intended for beginners just starting on their fitness journeys. Users can filter these entries by date and difficulty level. 
 
 ### Logging Future Goals
-Under the 'Future Goals' tab, users can log activities that they intend to complete on later dates. They will receive a reminder on their dashboard for the closest upcoming activity they have scheduled.
+Users can log activities that they intend to complete on later dates. These will be stored in a database of future entries and displayed in list format under the 'Future Goals' tab. Users will receive a reminder on their dashboard for the closest upcoming activity they have scheduled.
 
 ## Future plans for this project
 
