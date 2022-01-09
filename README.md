@@ -1,6 +1,7 @@
 # Tractivity
 Web application to help users track their fitness progress and set fitness goals. 
 
+
 ## How it works
 
 ### Dashboard
@@ -12,6 +13,7 @@ Users can log their past activities along with the date, type of activity, and n
 
 ### Logging Future Goals
 Users can log activities that they intend to complete on later dates. These will be stored in a database of future entries and displayed in list format under the 'Future Goals' tab. Users can filter these activities by date. They will also receive a reminder on their dashboard for the closest upcoming activity they have scheduled.
+
 
 ## Future plans for this project
 
@@ -26,6 +28,7 @@ The dashboard will display badges for weekly or monthly achievements, including:
 ### Nutrition Tracker
 This will be another tab where users can log their daily meals. They will then be shown on what levels of the food pyramid they have fulfilled, and what levels they still need nutrients in. 
 
+
 ## Credits:
 Special credits for initial idea, project name, starter code, database creation, logo design and extra help go to:
 - UC Davis Professor Nina Amenta 
@@ -33,6 +36,7 @@ Special credits for initial idea, project name, starter code, database creation,
 - Tutors Akshay Nama and Omar Burney.  
 
 This project would not have been possible without their guidance.
+
 
 ## Contact Me
 I would love to hear any feedback or new ideas for this project! Please feel free to contact me at krithikagr@gmail.com.
