@@ -1,5 +1,5 @@
 # Tractivity
-Web application to help users track their fitness progress and set fitness goals. 
+Web application to help users track their fitness progress and set fitness goals. Created along with Mandeepika Saini (@mandeepika) and Keya Barve (@keyabarve).
 
 
 ## How it works
@@ -29,7 +29,7 @@ The dashboard will display badges for weekly or monthly achievements, including:
 This will be another tab where users can log their daily meals. They will then be shown on what levels of the food pyramid they have fulfilled, and what levels they still need nutrients in. 
 
 
-## Credits
+## Credits  
 Special credits for initial idea, project name, starter code, database creation, logo design, and extra help go to:
 - Professor Nina Amenta, UC Davis
 - TAs David Bauer, Jia-Wei Liang, Rajat Jalal, Kyle Mitchell, and Vivian Pham
