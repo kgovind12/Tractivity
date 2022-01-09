@@ -4,7 +4,7 @@ Web application to help users track their fitness progress and set fitness goals
 ## How it works
 
 ### Dashboard
-Every user has a personalized dashboard displaying a bar graph of their weekly workouts based on the type of activity completed (default set to 'Walk). Users can select any activity from a dropdown to reveal the bar graph of their workouts for that activity over the past week. They can also change the date from a date picker to reveal all their workouts for the selected activity during the week ending with the selected date.  
+Every user has a personalized dashboard displaying a bar graph of their weekly workouts based on the type of activity completed (default set to 'Walk'). Users can select any activity from a dropdown to reveal the bar graph of their workouts for that activity over the past week. They can also change the date from a date picker to reveal all their workouts for the selected activity during the week ending with the selected date.  
 The dashboard also displays a dismissable reminder for the next activity that the user is scheduled to complete. 
 
 ### Logging Past Activities
