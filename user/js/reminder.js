@@ -30,7 +30,14 @@ let reminderMap = {
     basketball: 'Play basketball',
 }
 
+let badgeMap = {
+    'easy': ['Starter Spirit', 'Completed 10 days of easy workouts', 'badge-red'],
+    'medium': ['Go Getter', 'Completed 10 days of medium workouts', 'badge-blue'],
+    'hard': ['Motivation Master', 'Completed 10 days of hard workouts', 'badge-purple']
+}
+
 let dayOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+const badgesContainer = document.getElementById('badges');
 
 barchart.init('chart-anchor', 1000, 300);
 
@@ -47,10 +54,38 @@ document.getElementById('viewProgress-date').valueAsDate = newUTCDate();
 
 //defaults
 renderBarChart();
+getBadges();
 
 // Update the bar chart every time the form values are changed
 document.getElementById('view-activity-this-week-dropdown').addEventListener('change', renderBarChart);
 document.getElementById('viewProgress-date').addEventListener('change', renderBarChart);
+
+async function getBadges() {
+    let entries = await getAllPastEntries();
+    let easyCount = 0;
+    let mediumCount = 0;
+    let hardCount = 0;
+
+    for (let entry of entries) {
+        if (entry.difficulty === 'easy') {
+            easyCount++;
+        } else if (entry.difficulty === 'medium') {
+            mediumCount++;
+        } else if (entry.difficulty === 'hard') {
+            hardCount++;
+        }
+    }
+
+    if (easyCount >= 10) {
+        showBadge('easy');
+    }
+    if (mediumCount >= 10) {
+        showBadge('medium');
+    }
+    if (hardCount >= 10) {
+        showBadge('hard');
+    }
+}
 
 // Render bar chart
 async function renderBarChart() {
@@ -95,9 +130,9 @@ async function getDataForOneWeek(date, activity = null) {
     return response.json();
 }
 
-// Fetch all future data
-async function getAllData() {
-    let response = await fetch('/allfuture', {
+// Fetch all past data
+async function getAllPastEntries() {
+    let response = await fetch('/allpast', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -161,6 +196,31 @@ function getReminder() {
             resolve(error)
        })
    });
+}
+
+// Displays the badge depending on difficulty level completed
+function showBadge(difficulty) {
+    let badge = document.createElement('div');
+    badge.className = `badge ${badgeMap[difficulty][2]}`;
+
+    let icon = document.createElement('i');
+    icon.className = 'fas fa-medal';
+
+    let badgeText = document.createElement('div');
+    badgeText.className = 'badge-text';
+
+    let badgeTitle = document.createElement('h3');
+    badgeTitle.textContent = badgeMap[difficulty][0];
+
+    let badgeDesc = document.createElement('p');
+    badgeDesc.textContent = badgeMap[difficulty][1];
+
+    badgeText.appendChild(badgeTitle);
+    badgeText.appendChild(badgeDesc);
+
+    badge.appendChild(icon);
+    badge.appendChild(badgeText);
+    badgesContainer.appendChild(badge);
 }
 
 /**
