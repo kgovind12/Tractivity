@@ -86,6 +86,7 @@ document.getElementById('close').addEventListener('click', function() {
 let datepicker = document.getElementById('pastDateFilter');
 let difficultyFilter = document.getElementById('pastDifficultyFilter');
 
+// Handling search button click after selecting filters
 pastFilterSearch.addEventListener('click', async function() {
     // Clear the table's current rows
     let table = document.getElementById('activities');
@@ -126,6 +127,7 @@ pastFilterSearch.addEventListener('click', async function() {
     handleDeletion(table);
 });
 
+// Handling activity dropdown change in 'add past activity' form.
 pastActDropdown.addEventListener('change', function() {
     let pastActUnit = document.getElementById("pastAct-unit");
   
