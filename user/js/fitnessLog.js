@@ -39,17 +39,30 @@ var difficultyColorMap = {
     "hard": "red"
 }
 
-// Variables
-let addPastActBtn = document.getElementById("addPastActivity");
-let pastActOverlay = document.getElementById('pastAct-overlay');
-let overlayBackground = document.getElementById('overlay-bg');
+// Table + UI
+const table = document.getElementById('activities');
+const addPastActBtn = document.getElementById("addPastActivity");
+const pastActOverlay = document.getElementById('pastAct-overlay');
+const overlayBackground = document.getElementById('overlay-bg');
 
-let pastActSubmitBtn = document.getElementById('submitPastActivity');
-let pastActDropdown = document.getElementById('pastAct-activity');
-let pastFilterSearch = document.getElementById('pastFilters-search');
+// Filters
+const pastDateFilter = document.getElementById("pastDateFilter");
+const pastDifficultyFilter = document.getElementById('pastDifficultyFilter');
+const pastFilterSearch = document.getElementById('pastFilters-search');
+
+// Past activity Add form
+const pastActDropdown = document.getElementById('pastAct-activity');
+const pastActDate = document.getElementById('pastAct-date');
+const pastActScalar = document.getElementById('pastAct-scalar');
+const pastActUnit = document.getElementById('pastAct-unit');
+const pastActSubmitBtn = document.getElementById('submitPastActivity');
+
+const noneFoundText = document.getElementById('none-found');
+const noEntriesText = document.getElementById('no-entries');
+
 
 /* Set default date in forms to current date */
-document.getElementById('pastAct-date').valueAsDate = newUTCDate()
+pastActDate.valueAsDate = newUTCDate()
 
 // Set max date as today's date
 // From https://stackoverflow.com/questions/32378590/set-date-input-fields-max-date-to-today
@@ -67,8 +80,8 @@ if (mm < 10) {
 } 
     
 today = yyyy + '-' + mm + '-' + dd;
-document.getElementById("pastDateFilter").setAttribute("max", today);
-document.getElementById('pastAct-date').setAttribute("max", today);
+pastDateFilter.setAttribute("max", today);
+pastActDate.setAttribute("max", today);
 
 // Open the past activity overlay when Add is clicked
 addPastActBtn.addEventListener("click", function() {
@@ -82,29 +95,26 @@ document.getElementById('close').addEventListener('click', function() {
     overlayBackground.classList.add('hide');
 });
 
-// When search button is clicked
-let datepicker = document.getElementById('pastDateFilter');
-let difficultyFilter = document.getElementById('pastDifficultyFilter');
-
 // Handling search button click after selecting filters
 pastFilterSearch.addEventListener('click', async function() {
-    // Clear the table's current rows
     let table = document.getElementById('activities');
+
+    // Clear the table's current rows
     while (table.children.length > 1) {
         table.removeChild(table.lastChild);
     }
 
     if (table.childNodes.length == 1) {
-        document.getElementById('none-found').classList.remove('hide');
-        document.getElementById('no-entries').classList.add('hide');
+        noneFoundText.classList.remove('hide');
+        noEntriesText.classList.add('hide');
     }
 
     let selectedDate = "";
 
-    if (datepicker.value) {
-        selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
+    if (pastDateFilter.value) {
+        selectedDate = (new Date(pastDateFilter.value.replace(/-/g,'/'))).getTime();
     }
-    let selectedDifficulty = difficultyFilter.value;
+    let selectedDifficulty = pastDifficultyFilter.value;
 
     if (selectedDate == "" && selectedDifficulty == "") {
         createTableRows();
@@ -115,9 +125,9 @@ pastFilterSearch.addEventListener('click', async function() {
 
     // Show/hide none found text
     if (entries.length == 0) {
-        document.getElementById('none-found').classList.remove('hide');
+        noneFoundText.classList.remove('hide');
     } else {
-        document.getElementById('none-found').classList.add('hide');
+        noneFoundText.classList.add('hide');
     }
 
     for (let entry of entries) {
@@ -129,8 +139,6 @@ pastFilterSearch.addEventListener('click', async function() {
 
 // Handling activity dropdown change in 'add past activity' form.
 pastActDropdown.addEventListener('change', function() {
-    let pastActUnit = document.getElementById("pastAct-unit");
-  
     // Set units field based on which activity is selected
     switch (pastActDropdown.value) {
       case 'Walk': case 'Run': case 'Bike':
@@ -149,16 +157,15 @@ pastActDropdown.addEventListener('change', function() {
 
 // Submit past activity form
 pastActSubmitBtn.addEventListener('click', function() {
-    let pastDatepicker = document.getElementById('pastAct-date');
     // Activity Data to Send to Server
-    let activity = document.getElementById('pastAct-activity').value.toLowerCase();
-    let scalar = parseFloat(document.getElementById('pastAct-scalar').value);
+    let activity = pastActDropdown.value.toLowerCase();
+    let scalar = parseFloat(pastActScalar.value);
 
     let data = {
-        date: (new Date(pastDatepicker.value.replace(/-/g,'/'))).getTime(),
-        activity: document.getElementById('pastAct-activity').value.toLowerCase(),
-        scalar: parseFloat(document.getElementById('pastAct-scalar').value),
-        units: document.getElementById('pastAct-unit').value,
+        date: (new Date(pastActDate.value.replace(/-/g,'/'))).getTime(),
+        activity: pastActDropdown.value.toLowerCase(),
+        scalar: parseFloat(pastActScalar.value),
+        units: pastActUnit.value,
         postDate: (new Date()).getTime(),
         difficulty: calculateDifficulty(activity, scalar)
     }
@@ -196,10 +203,10 @@ pastActSubmitBtn.addEventListener('click', function() {
     addEntry();
 
     // Reset form
-    document.getElementById('pastAct-date').valueAsDate = newUTCDate();
-    document.getElementById('pastAct-activity').value = "Walk";
-    document.getElementById('pastAct-scalar').value = "";
-    document.getElementById('pastAct-unit').value = "km";
+    pastActDate.valueAsDate = newUTCDate();
+    pastActDropdown.value = "Walk";
+    pastActScalar.value = "";
+    pastActUnit.value = "km";
 });
 
 // Given the type of activity and the number of units completed, determine the difficulty level
@@ -225,8 +232,8 @@ async function createTableRows() {
 
     // If there is at least one entry, remove the 'no entries' text
     if (entries.length > 0) {
-        document.getElementById('no-entries').classList.add('hide');
-        document.getElementById('none-found').classList.add('hide');
+        noEntriesText.classList.add('hide');
+        noneFoundText.classList.add('hide');
     }
 
     for (let entry of entries) {
@@ -238,33 +245,30 @@ async function createTableRows() {
 
 // Function to add a row to the table
 async function addEntry() {
-    document.getElementById('no-entries').classList.add('hide');
+    noEntriesText.classList.add('hide');
     let entry = await getMostRecentEntry();
     let table = document.getElementById('activities');
 
-    let datepicker = document.getElementById('pastDateFilter');
-    let difficultyFilter = document.getElementById('pastDifficultyFilter');
-
     // If date and difficulty are both selected
-    if (datepicker.value && difficultyFilter.value != "") {
-        let selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
-        let selectedDifficulty = difficultyFilter.value;
+    if (pastDateFilter.value && pastDifficultyFilter.value != "") {
+        let selectedDate = (new Date(pastDateFilter.value.replace(/-/g,'/'))).getTime();
+        let selectedDifficulty = pastDifficultyFilter.value;
 
         if (entry.date == formatDate(selectedDate) && entry.difficulty == selectedDifficulty) {
-            document.getElementById('none-found').classList.add('hide');
+            noneFoundText.classList.add('hide');
             updateTable(entry, table);
         }
-    } else if (datepicker.value) { // if only date is selected
-        let selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
+    } else if (pastDateFilter.value) { // if only date is selected
+        let selectedDate = (new Date(pastDateFilter.value.replace(/-/g,'/'))).getTime();
 
         if (entry.date == formatDate(selectedDate)) {
-            document.getElementById('none-found').classList.add('hide');
+            noneFoundText.classList.add('hide');
             updateTable(entry, table);
         }
-    } else if (difficultyFilter.value) { // if only difficulty is selected
-        let selectedDifficulty = difficultyFilter.value;
+    } else if (pastDifficultyFilter.value) { // if only difficulty is selected
+        let selectedDifficulty = pastDifficultyFilter.value;
         if (entry.difficulty == selectedDifficulty) {
-            document.getElementById('none-found').classList.add('hide');
+            noneFoundText.classList.add('hide');
             updateTable(entry, table);
         }
     } else { // else, just update the table with the latest entry
@@ -273,7 +277,7 @@ async function addEntry() {
 
     // Check if table is empty, then display the 'none found' text
     if (table.children.length <= 1) {
-        document.getElementById('none-found').classList.remove('hide');
+        noneFoundText.classList.remove('hide');
     }
     
     handleDeletion(table);
@@ -281,7 +285,7 @@ async function addEntry() {
 
 // Function to update the table rows
 function updateTable(entry, table) {
-    console.log("updating table");
+    console.log("updating table ");
     if (entry.amount != -1 && entry.units != -1) {
         let row = document.createElement('tr');
         let dateCol = document.createElement('td');
@@ -341,12 +345,12 @@ function handleDeletion(container) {
                         container.removeChild(deletedRow);
                     } 
                     if (container.children.length == 1) {
-                        if (datepicker.value || difficultyFilter.value) {
-                            document.getElementById('none-found').classList.remove('hide');
-                            document.getElementById('no-entries').classList.add('hide');
+                        if (pastDateFilter.value || pastDifficultyFilter.value) {
+                            noneFoundText.classList.remove('hide');
+                            noEntriesText.classList.add('hide');
                         } else {
-                            document.getElementById('no-entries').classList.remove('hide');
-                            document.getElementById('none-found').classList.add('hide');
+                            noEntriesText.classList.remove('hide');
+                            noneFoundText.classList.add('hide');
                         }
                         
                     }
