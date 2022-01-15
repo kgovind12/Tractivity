@@ -98,7 +98,7 @@ document.getElementById('close').addEventListener('click', function() {
 // Handling search button click after selecting filters
 pastFilterSearch.addEventListener('click', async function() {
     let table = document.getElementById('activities');
-    
+
     // Clear the table's current rows
     while (table.children.length > 1) {
         table.removeChild(table.lastChild);
@@ -272,7 +272,6 @@ async function addEntry() {
             updateTable(entry, table);
         }
     } else { // else, just update the table with the latest entry
-        console.log("updating with nothing selected.")
         updateTable(entry, table);
     }
 
@@ -286,7 +285,7 @@ async function addEntry() {
 
 // Function to update the table rows
 function updateTable(entry, table) {
-    console.log("updating table ", table);
+    console.log("updating table ");
     if (entry.amount != -1 && entry.units != -1) {
         let row = document.createElement('tr');
         let dateCol = document.createElement('td');

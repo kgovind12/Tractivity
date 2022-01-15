@@ -1,13 +1,24 @@
 'use strict'
 
-let addFutureActBtn = document.getElementById('addFutureActivity');
-let futureActOverlay = document.getElementById('futureAct-overlay');
-let futureOverlayBackground = document.getElementById('future-overlay-bg');
-let futureActSubmitBtn = document.getElementById('submitFutureActivity');
-let futureFiltersSearch = document.getElementById('futureFilters-search');
+// Table + UI
+const addFutureActBtn = document.getElementById('addFutureActivity');
+const futureActOverlay = document.getElementById('futureAct-overlay');
+const futureOverlayBackground = document.getElementById('future-overlay-bg');
+
+// Future activity Add form
+const futureActDate = document.getElementById('futureAct-date');
+const futureActivityDropdown = document.getElementById('futureAct-activity');
+const futureActSubmitBtn = document.getElementById('submitFutureActivity');
+
+// Filters
+const futureDateFilter = document.getElementById('futureDateFilter');
+const futureFiltersSearch = document.getElementById('futureFilters-search');
+
+const noneFoundText = document.getElementById('future-none-found');
+const noEntriesText = document.getElementById('future-no-entries');
 
 // Set inital date as today's date
-document.getElementById('futureAct-date').valueAsDate = newUTCDate();
+futureActDate.valueAsDate = newUTCDate();
 
 // Set min date as today's date
 // From https://stackoverflow.com/questions/32378590/set-date-input-fields-max-date-to-today
@@ -25,8 +36,8 @@ if (mm < 10) {
 } 
     
 today = yyyy + '-' + mm + '-' + dd;
-document.getElementById("futureDateFilter").setAttribute("min", today);
-document.getElementById('futureAct-date').setAttribute("min", today);
+futureDateFilter.setAttribute("min", today);
+futureActDate.setAttribute("min", today);
 
 
 // Open future activity overlay when add is clicked
@@ -43,7 +54,6 @@ document.getElementById('future-close').addEventListener('click', function() {
 
 
 // On change date picker
-let datepicker = document.getElementById('futureDateFilter');
 futureFiltersSearch.addEventListener('click', async function() {
     // First clear the container rows
     let futureContainer = document.getElementById('future-activities');
@@ -52,31 +62,31 @@ futureFiltersSearch.addEventListener('click', async function() {
     }
 
     if (futureContainer.childNodes.length == 1) {
-        document.getElementById('future-none-found').classList.remove('hide');
+        noneFoundText.classList.remove('hide');
     }
 
-    if (!datepicker.value) {
+    if (!futureDateFilter.value) {
         createRows();
         return;
     }
 
     // Hide the 'no entries' text
-    document.getElementById('future-no-entries').classList.add('hide');
+    noEntriesText.classList.add('hide');
 
-    let selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
+    let selectedDate = (new Date(futureDateFilter.value.replace(/-/g,'/'))).getTime();
     let entries = await getEntriesByDate(selectedDate);
 
     // Show/hide the none found text based on whether any entries are found
     if (entries.length == 0) {
-        document.getElementById('future-none-found').classList.remove('hide');
+        noneFoundText.classList.remove('hide');
     } else {
-        document.getElementById('future-none-found').classList.add('hide');
+        noneFoundText.classList.add('hide');
     }
     
     // If datepicker has a value, update table with that value
     // Show only the entries whose date matches the selected date
     // Else, show all the entries
-    if (datepicker.value) {
+    if (futureDateFilter.value) {
         for (let entry of entries) {
             if (entry.date == formatDate(selectedDate)) {
                 updateRows(entry, futureContainer);
@@ -93,13 +103,10 @@ futureFiltersSearch.addEventListener('click', async function() {
 
 // Submit future activity form
 futureActSubmitBtn.addEventListener('click', function() {
-    // Activity Data to Send to Server
-    let futureDatepicker = document.getElementById('futureAct-date');
-
     // Date is converted into SQL integer before posting to db
     let data = {
-        date: (new Date(futureDatepicker.value.replace(/-/g,'/'))).getTime(),
-        activity: document.getElementById('futureAct-activity').value.toLowerCase(),
+        date: (new Date(futureActDate.value.replace(/-/g,'/'))).getTime(),
+        activity: futureActivityDropdown.value.toLowerCase(),
         postDate: (new Date()).getTime()
     }
 
@@ -136,8 +143,8 @@ futureActSubmitBtn.addEventListener('click', function() {
     addRow();
 
     // Reset form
-    document.getElementById('futureAct-date').valueAsDate = newUTCDate();
-    document.getElementById('futureAct-activity').value = "Walk";
+    futureActDate.valueAsDate = newUTCDate();
+    futureActivityDropdown.value = "Walk";
 });
 
 // Initialize all the rows with entries from db
@@ -147,23 +154,22 @@ async function createRows() {
 
     // If there is at least one entry, remove the 'no entries' text
     if (entries.length > 0) {
-        document.getElementById('future-no-entries').classList.add('hide');
-        document.getElementById('future-none-found').classList.add('hide');
+        noEntriesText.classList.add('hide');
+        noneFoundText.classList.add('hide');
     }
 
-    let datepicker = document.getElementById('futureDateFilter');
-    let selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
+    let selectedDate = (new Date(futureDateFilter.value.replace(/-/g,'/'))).getTime();
 
     // If datepicker has a value, show only the entries whose date matches the selected date
     // Else, show all the entries
-    if (datepicker.value) {
+    if (futureDateFilter.value) {
         for (let entry of entries) {
             if (entry.date == formatDate(selectedDate)) {
-                document.getElementById('future-none-found').classList.add('hide');
+                noneFoundText.classList.add('hide');
                 updateRows(entry, futureContainer);
             } else {
                 if (futureContainer.children.length <= 2) {
-                    document.getElementById('future-none-found').classList.remove('hide');
+                    noneFoundText.classList.remove('hide');
                 } 
             }
         }
@@ -180,27 +186,26 @@ async function createRows() {
 // Add a new row in the container
 async function addRow() {
     console.log("adding row");
-    document.getElementById('future-no-entries').classList.add('hide');
+    noEntriesText.classList.add('hide');
     let entry = await getMostRecentEntry();
     let futureContainer = document.getElementById('future-activities');
 
-    let datepicker = document.getElementById('futureDateFilter');
-    let selectedDate = (new Date(datepicker.value.replace(/-/g,'/'))).getTime();
+    let selectedDate = (new Date(futureDateFilter.value.replace(/-/g,'/'))).getTime();
 
     // If datepicker has a value: 
     // show the most recent entry from the db only if its date matches the selected date
     // Else, show the most recent entry from the db
-    if (datepicker.value) {
+    if (futureDateFilter.value) {
         if (entry.date == formatDate(selectedDate)) {
-            document.getElementById('future-none-found').classList.add('hide');
+            noneFoundText.classList.add('hide');
             updateRows(entry, futureContainer);
         } else {
             if (futureContainer.children.length <= 2) {
-                document.getElementById('future-none-found').classList.remove('hide');
+                noneFoundText.classList.remove('hide');
             } 
         }
     } else {
-        document.getElementById('future-none-found').classList.add('hide');
+        noneFoundText.classList.add('hide');
         updateRows(entry, futureContainer);
     }
 
@@ -255,12 +260,12 @@ function handleDeletion(container) {
                         container.removeChild(deletedNode);
                     } 
                     if (container.children.length == 2) {
-                        if (datepicker.value) {
-                            document.getElementById('future-none-found').classList.remove('hide');
-                            document.getElementById('future-no-entries').classList.add('hide');
+                        if (futureDateFilter.value) {
+                            noneFoundText.classList.remove('hide');
+                            noEntriesText.classList.add('hide');
                         } else {
-                            document.getElementById('future-no-entries').classList.remove('hide');
-                            document.getElementById('future-none-found').classList.add('hide');
+                            noEntriesText.classList.remove('hide');
+                            noneFoundText.classList.add('hide');
                         }
                         
                     }
