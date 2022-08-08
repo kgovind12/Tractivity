@@ -1,5 +1,5 @@
 # Tractivity
-Web application to help users track their fitness progress and set fitness goals. Created along with Mandeepika Saini (@mandeepika) and Keya Barve (@keyabarve).
+Web application to help users track their fitness progress and set fitness goals. Created along with Mandeepika Saini (@mandeepika), Keya Barve (@keyabarve) and Malini Dasgupta (@MaliniDasgupta).
 
 
 ## How it works
